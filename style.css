@@ -1,0 +1,40 @@
+.height{
+  height: 100%;
+}
+
+.blue{
+  background-color: #3282f7;
+  color: white;
+}
+
+.green{
+  background-color: #68D9A4;
+  color: white;
+}
+
+.red{
+  background-color: #ED6454;
+  color: white;
+}
+
+.description, .ingredients{
+  font-size: 80%;
+}
+
+.ingredients{
+  font-weight: bold;
+}
+
+.background{
+  background-color: #e7e7e7;
+  border-radius: 0 0 5px 5px;
+}
+
+.colors-ingredients{
+  background-color: #3282f7;
+  color: white;
+}
+
+li{
+  list-style-type: none;
+}
