@@ -41,6 +41,10 @@ async function renderRecipes() {
   let ustensiles = [];
 
   function drawUpTheDropDownLists(object) {
+
+optionsIngredients.innerHTML="";
+optionsUstensils.innerHTML="";
+optionsAppliances.innerHTML="";
     // Cette partie devra être exécutée pour MAJ les listes déroulantes à partir du tableau d'objets
     //qui ressort de applyFilter(value)
     for (let i = 0; i < object.length; i++) {
@@ -50,7 +54,7 @@ async function renderRecipes() {
       }
     }
     ingredients = filterArray(ingredients);
-    //console.log(ingredients);
+    console.log(ingredients);
 
     for (let i = 0; i < ingredients.length; i++) {
       let option = document.createElement("option");
@@ -65,8 +69,8 @@ async function renderRecipes() {
       }
     }
     ustensiles = filterArray(ustensiles);
-    //console.log(ingredients);
-    
+    console.log(ustensiles);
+
     for (let i = 0; i < ustensiles.length; i++) {
       let option = document.createElement("option");
       option.setAttribute("value", `${ustensiles[i]}`);
@@ -78,6 +82,7 @@ async function renderRecipes() {
       appareils.push(outil);
     }
     appareils = filterArray(appareils);
+    console.log(appareils);
 
     for (let i = 0; i < appareils.length; i++) {
       let option = document.createElement("option");
@@ -206,10 +211,16 @@ async function renderRecipes() {
     if (firstResearch.value.length >= 3) {
       listRecipes.innerHTML = "";
       recettes = [];
+        ingredients = [];
+      appareils = [];
+      ustensiles = [];
       applyFilter(firstResearch.value);
+      //console.log(ingredients,ustensiles,appareils);
     } else {
       listRecipes.innerHTML = "";
       recettes = [];
+      drawUpTheDropDownLists(recipes);
+      //console.log(ingredients,ustensiles,appareils);
     }
   });
 }
