@@ -10,16 +10,14 @@ async function getData() {
 
 let firstResearch = document.getElementById("first-research");
 
-let listIngredients = document.querySelector("#listOfIngredients");
-let listUstensils = document.getElementById("list-ustensils");
-let listAppliances = document.getElementById("list-appliances");
+let listIngredients = document.querySelector("input[list=ingredients]");
+let optionsIngredients = document.querySelector("#ingredients");
+let listUstensils = document.querySelector("#listOfUstensils");
+let optionsUstensils = document.querySelector("#ustensiles");
+let listAppliances = document.querySelector("#listOfAppliances");
+let optionsAppliances = document.querySelector("#appareils");
 
 let listRecipes = document.querySelector("#recipes");
-
-let recettes = [];
-let ingredients = [];
-let appareils = [];
-let ustensiles = [];
 
 // Fonction pour supprimer les string en doublons
 function filterArray(arrayOfStrings) {
@@ -35,65 +33,66 @@ function getUniqueListBy(arr, key) {
   return [...new Map(arr.map((item) => [item[key], item])).values()];
 }
 
-function drawUpTheDropDownLists(object) {
-  // Cette partie devra être exécutée pour MAJ les listes déroulantes à partir du tableau d'objets
-  //qui ressort de applyFilter(value)
-  for (let i = 0; i < object.length; i++) {
-    for (let j = 0; j < object[i].ingredients.length; j++) {
-      let food = object[i].ingredients[j].ingredient;
-      ingredients.push(food);
-    }
-  }
-  ingredients = filterArray(ingredients);
-  console.log(ingredients);
-
-
-  let input = document.createElement("input");
-  let datalist = document.createElement("datalist");
-
-  listOfIngredients.appendChild(input);
-  input.appendChild(datalist);
-
-  for (let i = 0; i < ingredients.length; i++) {
-    let option = document.createElement("option");
-    option.setAttribute("value",`${ingredients[i]}`);
-    datalist.appendChild(option);
-  }
-
-  input.setAttribute("class", "form-control");
-  input.setAttribute("list", "datalistOptions");
-  input.setAttribute("id", "exampleDataList");
-  input.setAttribute("placeholder", "Ingrédients");
-  datalist.setAttribute("id", "datalistOptions");
-
-  /*
-  for (let i = 0; i < object.length; i++) {
-    for (let j = 0; j < object[i].ustensils.length; j++) {
-      let kitchen = object[i].ustensils[j];
-      ustensiles.push(kitchen);
-    }
-  }
-  ustensiles = filterArray(ustensiles);
-
-  for (let i = 0; i < object.length; i++) {
-    let outil = object[i].appliance;
-    appareils.push(outil);
-  }
-  appareils = filterArray(appareils);
-  */
-  
-}
-
 async function renderRecipes() {
-  const recipes = await getData();
+  let recipes = await getData();
+  let recettes = [];
+  let ingredients = [];
+  let appareils = [];
+  let ustensiles = [];
+
+  function drawUpTheDropDownLists(object) {
+    // Cette partie devra être exécutée pour MAJ les listes déroulantes à partir du tableau d'objets
+    //qui ressort de applyFilter(value)
+    for (let i = 0; i < object.length; i++) {
+      for (let j = 0; j < object[i].ingredients.length; j++) {
+        let food = object[i].ingredients[j].ingredient;
+        ingredients.push(food);
+      }
+    }
+    ingredients = filterArray(ingredients);
+    //console.log(ingredients);
+
+    for (let i = 0; i < ingredients.length; i++) {
+      let option = document.createElement("option");
+      option.setAttribute("value", `${ingredients[i]}`);
+      optionsIngredients.appendChild(option);
+    }
+
+    for (let i = 0; i < object.length; i++) {
+      for (let j = 0; j < object[i].ustensils.length; j++) {
+        let kitchen = object[i].ustensils[j];
+        ustensiles.push(kitchen);
+      }
+    }
+    ustensiles = filterArray(ustensiles);
+    //console.log(ingredients);
+    
+    for (let i = 0; i < ustensiles.length; i++) {
+      let option = document.createElement("option");
+      option.setAttribute("value", `${ustensiles[i]}`);
+      optionsUstensils.appendChild(option);
+    }
+
+    for (let i = 0; i < object.length; i++) {
+      let outil = object[i].appliance;
+      appareils.push(outil);
+    }
+    appareils = filterArray(appareils);
+
+    for (let i = 0; i < appareils.length; i++) {
+      let option = document.createElement("option");
+      option.setAttribute("value", `${appareils[i]}`);
+      optionsAppliances.appendChild(option);
+    }
+  }
 
   drawUpTheDropDownLists(recipes);
-  function createView(objects) {
-
-    /* Les liste déroulantes doivent être initialisés avec tous les éléments
+  /* Les liste déroulantes doivent être initialisés avec tous les éléments
     drawUpTheDropDownLists(recipes);*/
 
-    console.log(listRecipes);
+  //drawUpTheDropDownLists(recipes);
+
+  function createView(objects) {
     // Pour chaque recette création des éléments DOM
     for (const object of objects) {
       let card = document.createElement("div");
@@ -154,7 +153,7 @@ async function renderRecipes() {
       description.setAttribute("class", "col-lg-7 description");
     }
   }
-  
+
   function applyFilter(value) {
     // Gérer la sensibilité à la casse
     let firstMinCharacter = value[0].toUpperCase() + value.slice(1);
@@ -194,20 +193,23 @@ async function renderRecipes() {
     }
 
     let uniqueRecipes = getUniqueListBy(recettes, "id");
-    //console.log(uniqueRecipes);
+    console.log(uniqueRecipes);
     // Lorsque le tri est effectué il faut mettre à jour les listes déroulantes
-    listOfIngredients.innerHTML="";
+    listIngredients.innerHTML = "";
     drawUpTheDropDownLists(uniqueRecipes);
     createView(uniqueRecipes);
   }
 
+  // onchange un input à partir de 3 caractères
   firstResearch.addEventListener("input", function () {
     // Il va falloir appeler la fonction à chaque saisie de caractère
-    if (firstResearch.value.length === 3) {
-      applyFilter(firstResearch.value);
-    } else if (firstResearch.value.length > 3) {
+    if (firstResearch.value.length >= 3) {
       listRecipes.innerHTML = "";
+      recettes = [];
       applyFilter(firstResearch.value);
+    } else {
+      listRecipes.innerHTML = "";
+      recettes = [];
     }
   });
 }
