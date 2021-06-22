@@ -17,6 +17,21 @@
   color: white;
 }
 
+.blue, .green, .red{
+  border: none;
+  border-radius: 5px;
+  width: 200px;
+  padding: 10px;
+}
+
+.margin{
+  margin-bottom: 5%;
+}
+
+::placeholder{
+  color: white;
+}
+
 .description, .ingredients{
   font-size: 80%;
 }

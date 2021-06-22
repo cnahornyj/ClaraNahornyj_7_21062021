@@ -8,14 +8,23 @@ async function getData() {
   }
 }
 
+window.onbeforeunload = function () {
+  localStorage.clear();
+}
+
 let firstResearch = document.getElementById("first-research");
 
 let listIngredients = document.querySelector("input[list=ingredients]");
 let optionsIngredients = document.querySelector("#ingredients");
-let listUstensils = document.querySelector("#listOfUstensils");
+let listUstensils = document.querySelector("input[list=ustensiles]");
 let optionsUstensils = document.querySelector("#ustensiles");
-let listAppliances = document.querySelector("#listOfAppliances");
+let listAppliances = document.querySelector("input[list=appareils]");
 let optionsAppliances = document.querySelector("#appareils");
+console.log(
+  optionsIngredients.options,
+  optionsUstensils.options,
+  optionsAppliances.options
+);
 
 let listRecipes = document.querySelector("#recipes");
 
@@ -36,25 +45,27 @@ function getUniqueListBy(arr, key) {
 async function renderRecipes() {
   let recipes = await getData();
   let recettes = [];
+  let recettes1 = [];
   let ingredients = [];
   let appareils = [];
   let ustensiles = [];
 
+  // MAJ des listes déroulantes avec pour paramètre l'objet
   function drawUpTheDropDownLists(object) {
+    optionsIngredients.innerHTML = "";
+    optionsUstensils.innerHTML = "";
+    optionsAppliances.innerHTML = "";
 
-optionsIngredients.innerHTML="";
-optionsUstensils.innerHTML="";
-optionsAppliances.innerHTML="";
-    // Cette partie devra être exécutée pour MAJ les listes déroulantes à partir du tableau d'objets
-    //qui ressort de applyFilter(value)
+    // Pour chaque ingrédient dans chaque recette --> ingredients[]
     for (let i = 0; i < object.length; i++) {
       for (let j = 0; j < object[i].ingredients.length; j++) {
         let food = object[i].ingredients[j].ingredient;
         ingredients.push(food);
       }
     }
+    // Supprimer les doublons (deux recettes peuvent avoir des ingrédients similaires)
     ingredients = filterArray(ingredients);
-    console.log(ingredients);
+    //console.log(ingredients);
 
     for (let i = 0; i < ingredients.length; i++) {
       let option = document.createElement("option");
@@ -62,14 +73,15 @@ optionsAppliances.innerHTML="";
       optionsIngredients.appendChild(option);
     }
 
+    // Pour chaque ustensile dans chaque recette --> ustensiles[]
     for (let i = 0; i < object.length; i++) {
       for (let j = 0; j < object[i].ustensils.length; j++) {
         let kitchen = object[i].ustensils[j];
         ustensiles.push(kitchen);
       }
     }
+    // Supprimer les doublons (deux recettes peuvent avoir des ustensiles similaires)
     ustensiles = filterArray(ustensiles);
-    console.log(ustensiles);
 
     for (let i = 0; i < ustensiles.length; i++) {
       let option = document.createElement("option");
@@ -77,29 +89,33 @@ optionsAppliances.innerHTML="";
       optionsUstensils.appendChild(option);
     }
 
+    // Pour chaque appareil dans chaque recette --> appareils[]
     for (let i = 0; i < object.length; i++) {
       let outil = object[i].appliance;
       appareils.push(outil);
     }
+    // Supprimer les doublons (deux recettes peuvent avoir des appareils similaires)
     appareils = filterArray(appareils);
-    console.log(appareils);
+    //console.log(appareils);
 
     for (let i = 0; i < appareils.length; i++) {
       let option = document.createElement("option");
       option.setAttribute("value", `${appareils[i]}`);
       optionsAppliances.appendChild(option);
     }
+
+    //console.log(optionsIngredients.options, optionsUstensils.options, optionsAppliances.options);
   }
 
+  // Les listes déroulantes doivent être initialisés avec la totalité des ingr,ust,app (logique aucun filtre appliqué dessus à ce stade)
   drawUpTheDropDownLists(recipes);
-  /* Les liste déroulantes doivent être initialisés avec tous les éléments
-    drawUpTheDropDownLists(recipes);*/
 
-  //drawUpTheDropDownLists(recipes);
+  // Créer la vue pour la liste de recettes
+  function createView(recipes) {
 
-  function createView(objects) {
+    listRecipes.innerHTML = "";
     // Pour chaque recette création des éléments DOM
-    for (const object of objects) {
+    for (const recipe of recipes) {
       let card = document.createElement("div");
       let image = document.createElement("img");
       let cardBody = document.createElement("div");
@@ -119,36 +135,36 @@ optionsAppliances.innerHTML="";
       cardBody.appendChild(row1);
       row1.appendChild(ingredients);
 
-      for (let i = 0; i < object.ingredients.length; i++) {
+      for (let i = 0; i < recipe.ingredients.length; i++) {
         let ingredient = document.createElement("li");
         ingredients.appendChild(ingredient);
         ingredients.setAttribute("class", "col-lg-5 ingredients");
         if (
           Object.prototype.hasOwnProperty.call(
-            object.ingredients[i],
+            recipe.ingredients[i],
             "quantity"
           ) &&
-          Object.prototype.hasOwnProperty.call(object.ingredients[i], "unit")
+          Object.prototype.hasOwnProperty.call(recipe.ingredients[i], "unit")
         ) {
-          ingredient.innerText = `${object.ingredients[i].ingredient} : ${object.ingredients[i].quantity} ${object.ingredients[i].unit}`;
+          ingredient.innerText = `${recipe.ingredients[i].ingredient} : ${recipe.ingredients[i].quantity} ${recipe.ingredients[i].unit}`;
         } else if (
           Object.prototype.hasOwnProperty.call(
-            object.ingredients[i],
+            recipe.ingredients[i],
             "quantity"
           )
         ) {
-          ingredient.innerText = `${object.ingredients[i].ingredient} : ${object.ingredients[i].quantity}`;
+          ingredient.innerText = `${recipe.ingredients[i].ingredient} : ${recipe.ingredients[i].quantity}`;
         } else {
-          ingredient.innerText = `${object.ingredients[i].ingredient}`;
+          ingredient.innerText = `${recipe.ingredients[i].ingredient}`;
         }
       }
       row1.appendChild(description);
 
       image.setAttribute("class", "card-img-top");
       image.setAttribute("src", "fond-gris.png");
-      name.textContent = `${object.name}`;
-      time.innerHTML = `<i class="fa fa-clock-o" aria-hidden="true"></i> ${object.time} min`;
-      description.textContent = `${object.description}`;
+      name.textContent = `${recipe.name}`;
+      time.innerHTML = `<i class="fa fa-clock-o" aria-hidden="true"></i> ${recipe.time} min`;
+      description.textContent = `${recipe.description}`;
       card.setAttribute("class", "col-sm-12 col-md-6 col-lg-4");
       cardBody.setAttribute("class", "card-body background");
       row.setAttribute("class", "row");
@@ -159,33 +175,39 @@ optionsAppliances.innerHTML="";
     }
   }
 
+  // Appliquer le filtre selon la valeur de l'input
   function applyFilter(value) {
     // Gérer la sensibilité à la casse
     let firstMinCharacter = value[0].toUpperCase() + value.slice(1);
     let firstMajCharacter = value[0].toLowerCase() + value.slice(1);
     console.log(value);
 
+    // Pour chaque recette
     for (let i = 0; i < recipes.length; i++) {
       for (let j = 0; j < recipes[i].ingredients.length; j++) {
         for (let k = 0; k < recipes[i].ustensils.length; k++) {
+          // Si la valeur de l'input correspond au nom de la recette RECETTE en question --> recettes[]
           if (
             recipes[i].name.includes(value) ||
             recipes[i].name.includes(firstMinCharacter) ||
             recipes[i].name.includes(firstMajCharacter)
           ) {
             recettes.push(recipes[i]);
+            // Si la valeur de l'input correspond à un appareil de la recette RECETTE en question --> recettes[]
           } else if (
             recipes[i].appliance.includes(value) ||
             recipes[i].appliance.includes(firstMinCharacter) ||
             recipes[i].appliance.includes(firstMajCharacter)
           ) {
             recettes.push(recipes[i]);
+            // Si la valeur de l'input correspond à un ingrédient de la recette RECETTE en question --> recettes[]
           } else if (
             recipes[i].ingredients[j].ingredient.includes(value) ||
             recipes[i].ingredients[j].ingredient.includes(firstMinCharacter) ||
             recipes[i].ingredients[j].ingredient.includes(firstMajCharacter)
           ) {
             recettes.push(recipes[i]);
+            // Si la valeur de l'input correspond à un ustensile de la recette RECETTE en question --> recettes[]
           } else if (
             recipes[i].ustensils[k].includes(value) ||
             recipes[i].ustensils[k].includes(firstMinCharacter) ||
@@ -197,31 +219,111 @@ optionsAppliances.innerHTML="";
       }
     }
 
-    let uniqueRecipes = getUniqueListBy(recettes, "id");
-    console.log(uniqueRecipes);
-    // Lorsque le tri est effectué il faut mettre à jour les listes déroulantes
+    // Appliquer le filtre sur les objets, suppression des doublons par id (la valeur de l'input peut correspondre au nom mais aussi à un ingr, ust, app..)
+    recettes = getUniqueListBy(recettes, "id");
+    console.log(recettes);
+    //localStorage.setItem('recettes', JSON.stringify(uniqueRecipes));
+
+    // Lorsque le tri est effectué il faut mettre à jour les listes déroulantes en conséquence
     listIngredients.innerHTML = "";
-    drawUpTheDropDownLists(uniqueRecipes);
-    createView(uniqueRecipes);
+    listUstensils.innerHTML = "";
+    listAppliances.innerHTML = "";
+
+    //drawUpTheDropDownLists(uniqueRecipes);
+
+    createView(recettes);
   }
 
-  // onchange un input à partir de 3 caractères
+  function applyScndFilter(value) {
+    // Gérer la sensibilité à la casse
+    let firstMinCharacter = value[0].toUpperCase() + value.slice(1);
+    let firstMajCharacter = value[0].toLowerCase() + value.slice(1);
+    console.log(value);
+
+    // Pour chaque recette
+    for (let i = 0; i < recettes.length; i++) {
+      for (let j = 0; j < recettes[i].ingredients.length; j++) {
+        for (let k = 0; k < recettes[i].ustensils.length; k++) {
+          // Si la valeur de l'input correspond au nom de la recette RECETTE en question --> recettes[]
+          if (
+            recettes[i].name.includes(value) ||
+            recettes[i].name.includes(firstMinCharacter) ||
+            recettes[i].name.includes(firstMajCharacter)
+          ) {
+            recettes1.push(recettes[i]);
+            // Si la valeur de l'input correspond à un appareil de la recette RECETTE en question --> recettes[]
+          } else if (
+            recettes[i].appliance.includes(value) ||
+            recettes[i].appliance.includes(firstMinCharacter) ||
+            recettes[i].appliance.includes(firstMajCharacter)
+          ) {
+            recettes1.push(recettes[i]);
+            // Si la valeur de l'input correspond à un ingrédient de la recette RECETTE en question --> recettes[]
+          } else if (
+            recettes[i].ingredients[j].ingredient.includes(value) ||
+            recettes[i].ingredients[j].ingredient.includes(firstMinCharacter) ||
+            recettes[i].ingredients[j].ingredient.includes(firstMajCharacter)
+          ) {
+            recettes1.push(recettes[i]);
+            // Si la valeur de l'input correspond à un ustensile de la recette RECETTE en question --> recettes[]
+          } else if (
+            recettes[i].ustensils[k].includes(value) ||
+            recettes[i].ustensils[k].includes(firstMinCharacter) ||
+            recettes[i].ustensils[k].includes(firstMajCharacter)
+          ) {
+            recettes1.push(recettes[i]);
+          }
+        }
+      }
+    }
+
+    // Appliquer le filtre sur les objets, suppression des doublons par id (la valeur de l'input peut correspondre au nom mais aussi à un ingr, ust, app..)
+    recettes1 = getUniqueListBy(recettes1, "id");
+    console.log(recettes1);
+    //localStorage.setItem('recettes', JSON.stringify(uniqueRecipes));
+
+    // Lorsque le tri est effectué il faut mettre à jour les listes déroulantes en conséquence
+    listIngredients.innerHTML = "";
+    listUstensils.innerHTML = "";
+    listAppliances.innerHTML = "";
+
+    //drawUpTheDropDownLists(uniqueRecipes);
+
+    createView(recettes1);
+  }
+
   firstResearch.addEventListener("input", function () {
-    // Il va falloir appeler la fonction à chaque saisie de caractère
+    // Si la valeur de l'input est égale ou supérieure à 3 caractères REINITIALISATION
     if (firstResearch.value.length >= 3) {
       listRecipes.innerHTML = "";
       recettes = [];
-        ingredients = [];
+      ingredients = [];
       appareils = [];
       ustensiles = [];
       applyFilter(firstResearch.value);
-      //console.log(ingredients,ustensiles,appareils);
+    // Sinon vider la liste des recettes et réinitialiser les listes déroulantes "pleines"  
     } else {
       listRecipes.innerHTML = "";
       recettes = [];
       drawUpTheDropDownLists(recipes);
-      //console.log(ingredients,ustensiles,appareils);
     }
+  });
+
+  listIngredients.addEventListener("change", function () {
+    applyScndFilter(listIngredients.value);
+  });
+  
+  listUstensils.addEventListener("change", function () {
+    let actualRecipes = localStorage.getItem('recettes');
+    let goodRecipes = JSON.parse(actualRecipes);
+    console.log(goodRecipes);
+    applySecondaryFilter(goodRecipes, listIngredients.value);
+  });
+  listAppliances.addEventListener("change", function () {
+    let actualRecipes = localStorage.getItem('recettes');
+    let goodRecipes = JSON.parse(actualRecipes);
+    console.log(goodRecipes);
+    applySecondaryFilter(goodRecipes, listIngredients.value);
   });
 }
 
