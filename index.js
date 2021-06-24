@@ -16,11 +16,12 @@ let listUstensils = document.querySelector("input[list=ustensiles]");
 let optionsUstensils = document.querySelector("#ustensiles");
 let listAppliances = document.querySelector("input[list=appareils]");
 let optionsAppliances = document.querySelector("#appareils");
-console.log(
+let tags = document.querySelector("#tags");
+/*console.log(
   optionsIngredients.options,
   optionsUstensils.options,
   optionsAppliances.options
-);
+);*/
 
 let listRecipes = document.querySelector("#recipes");
 
@@ -110,103 +111,187 @@ async function renderRecipes() {
     }
   }
 
-  function applyMainFilter(object, value) {
-    let recettes = object.filter(function (e) {
-      for (let j = 0; j < e.ingredients.length; j++) {
-        for (let k = 0; k < e.ustensils.length; k++) {
-          if (
-            e.name.includes(value) ||
-            e.appliance.includes(value) ||
-            e.ingredients[j].ingredient.includes(value) ||
-            e.ustensils[k].includes(value)
-          ) {
-            return e;
-          }
-        }
+  function updateDropDownLists(recipes) {
+    ingredients = [];
+    appareils = [];
+    ustensiles = [];
+    optionsIngredients.innerHTML = "";
+    optionsUstensils.innerHTML = "";
+    optionsAppliances.innerHTML = "";
+
+    // Pour chaque ingrédient dans chaque recette --> ingredients[]
+    for (let i = 0; i < recipes.length; i++) {
+      for (let j = 0; j < recipes[i].ingredients.length; j++) {
+        let food = recipes[i].ingredients[j].ingredient;
+        ingredients.push(food);
       }
-    });
-    return recettes;
+    }
+    // Supprimer les doublons (deux recettes peuvent avoir des ingrédients similaires)
+    ingredients = filterArray(ingredients);
+    console.log(ingredients);
+    for (let i = 0; i < ingredients.length; i++) {
+      let option = document.createElement("option");
+      option.setAttribute("value", `${ingredients[i]}`);
+      optionsIngredients.appendChild(option);
+    }
+    // Pour chaque ustensile dans chaque recette --> ustensiles[]
+    for (let i = 0; i < recipes.length; i++) {
+      for (let j = 0; j < recipes[i].ustensils.length; j++) {
+        let kitchen = recipes[i].ustensils[j];
+        ustensiles.push(kitchen);
+      }
+    }
+    // Supprimer les doublons (deux recettes peuvent avoir des ustensiles similaires)
+    ustensiles = filterArray(ustensiles);
+    console.log(ustensiles);
+    for (let i = 0; i < ustensiles.length; i++) {
+      let option = document.createElement("option");
+      option.setAttribute("value", `${ustensiles[i]}`);
+      optionsUstensils.appendChild(option);
+    }
+    // Pour chaque appareil dans chaque recette --> appareils[]
+    for (let i = 0; i < recipes.length; i++) {
+      let outil = recipes[i].appliance;
+      appareils.push(outil);
+    }
+    // Supprimer les doublons (deux recettes peuvent avoir des appareils similaires)
+    appareils = filterArray(appareils);
+    console.log(appareils);
+    for (let i = 0; i < appareils.length; i++) {
+      let option = document.createElement("option");
+      option.setAttribute("value", `${appareils[i]}`);
+      optionsAppliances.appendChild(option);
+    }
   }
 
-  function applyIgdrFilter(value) {
-    let recipes = localStorage.getItem("recettes");
-    let filteredRecipes = JSON.parse(recipes);
-    console.log(filteredRecipes);
-    let recettes = filteredRecipes.filter(function (e) {
-      for (let i = 0; i < e.ingredients.length; i++) {
-        if (e.ingredients[i].ingredient === value) {
-          return e;
-        }
-      }
-    });
-    return recettes;
-  }
-
-  function applyUstFilter(value){
-    let recipes = localStorage.getItem("recettesFiltrees");
-    let filteredRecipes = JSON.parse(recipes);
-    console.log(filteredRecipes);
-    let recettes = filteredRecipes.filter(function (e) {
-      for (let k = 0; k < e.ustensils.length; k++) {
-        if (e.ustensils[k].includes(value)) {
-          return e;
-        }
-      }
-    });
-    console.log(recettes);
-    localStorage.setItem("filteredRecipes",JSON.stringify(recettes));
-    createView(recettes);
-  }
-
-  function applyAppFilter(value){
-    let recipes = localStorage.getItem("filteredRecipes");
-    let filteredRecipes = JSON.parse(recipes);
-    console.log(filteredRecipes);
-    let recettes = filteredRecipes.filter(function (e) {
-        if (e.appliance.includes(value)) {
-          return e;
-      }
-    });
-    console.log(recettes);
-    createView(recettes);
-  }
+  updateDropDownLists(recettes);
 
   firstResearch.addEventListener("input", function () {
     // Si la valeur de l'input est égale ou supérieure à 3 caractères REINITIALISATION
     if (firstResearch.value.length >= 3) {
-      results = recipes.filter(function (e) {
+      // Si 1er tableau filtré inexistant filtré le tableau de base
+      if (results.length === 0) {
+        results = recipes.filter(function (e) {
+          for (let j = 0; j < e.ingredients.length; j++) {
+            for (let k = 0; k < e.ustensils.length; k++) {
+              if (
+                e.name.includes(firstResearch.value) ||
+                e.appliance.includes(firstResearch.value) ||
+                e.ingredients[j].ingredient.includes(firstResearch.value) ||
+                e.ustensils[k].includes(firstResearch.value)
+              ) {
+                return e;
+              }
+            }
+          }
+        });
+        updateDropDownLists(results);
+        createView(results);
+        // Sinon filtré le tableau filtré
+      } else {
+        results = results.filter(function (e) {
+          for (let j = 0; j < e.ingredients.length; j++) {
+            for (let k = 0; k < e.ustensils.length; k++) {
+              if (
+                e.name.includes(firstResearch.value) ||
+                e.appliance.includes(firstResearch.value) ||
+                e.ingredients[j].ingredient.includes(firstResearch.value) ||
+                e.ustensils[k].includes(firstResearch.value)
+              ) {
+                return e;
+              }
+            }
+          }
+        });
+        updateDropDownLists(results);
+        createView(results);
+      }
+      console.log(results);
+    } else {
+      // gérer le cas où le filtre est supprimé
+    }
+  });
+
+  listIngredients.addEventListener("change", function () {
+    if (results.length === 0) {
+      results = recettes.filter(function (e) {
         for (let j = 0; j < e.ingredients.length; j++) {
           for (let k = 0; k < e.ustensils.length; k++) {
-            if (
-              e.name.includes("coco") ||
-              e.appliance.includes("coco") ||
-              e.ingredients[j].ingredient.includes("coco") ||
-              e.ustensils[k].includes("coco")
-            ) {
+            if (e.ingredients[j].ingredient.includes(listIngredients.value)) {
               return e;
             }
           }
         }
       });
-      console.log(`Résultats 2 : ${results}`);
+      updateDropDownLists(results);
+      createView(results);
     } else {
+      results = results.filter(function (e) {
+        for (let j = 0; j < e.ingredients.length; j++) {
+          for (let k = 0; k < e.ustensils.length; k++) {
+            if (e.ingredients[j].ingredient.includes(listIngredients.value)) {
+              return e;
+            }
+          }
+        }
+      });
+      updateDropDownLists(results);
+      createView(results);
     }
-  });
-
-  listIngredients.addEventListener("change", function () {
-    console.log(`Résultats 3 : ${results}`);
+    console.log(results);
   });
 
   listUstensils.addEventListener("change", function () {
-    
+    if (results.length === 0) {
+      results = recettes.filter(function (e) {
+        for (let j = 0; j < e.ingredients.length; j++) {
+          for (let k = 0; k < e.ustensils.length; k++) {
+            if (e.ustensils[k].includes(listUstensils.value)) {
+              return e;
+            }
+          }
+        }
+      });
+      updateDropDownLists(results);
+      createView(results);
+    } else {
+      results = results.filter(function (e) {
+        for (let j = 0; j < e.ingredients.length; j++) {
+          for (let k = 0; k < e.ustensils.length; k++) {
+            if (e.ustensils[k].includes(listUstensils.value)) {
+              return e;
+            }
+          }
+        }
+      });
+      updateDropDownLists(results);
+      createView(results);
+    }
+    console.log(results);
   });
+
   listAppliances.addEventListener("change", function () {
-    
+    if (results.length === 0) {
+      results = recettes.filter(function (e) {
+        if (e.appliance.includes(listAppliances.value)) {
+          return e;
+        }
+      });
+      updateDropDownLists(results);
+      createView(results);
+    } else {
+      results = results.filter(function (e) {
+        if (e.appliance.includes(listAppliances.value)) {
+          return e;
+        }
+      });
+      updateDropDownLists(results);
+      createView(results);
+    }
+    console.log(results);
   });
 
-  console.log(`Résultats 1 : ${results}`);
+  console.log(results);
 }
-
-
 
 renderRecipes();
