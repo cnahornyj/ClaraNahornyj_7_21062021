@@ -189,6 +189,7 @@ async function renderRecipes() {
             }
           }
         });
+        console.log(results);
         updateDropDownLists(results);
         createView(results);
       } else {
