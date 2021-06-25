@@ -16,7 +16,9 @@ let listUstensils = document.querySelector("input[list=ustensiles]");
 let optionsUstensils = document.querySelector("#ustensiles");
 let listAppliances = document.querySelector("input[list=appareils]");
 let optionsAppliances = document.querySelector("#appareils");
-let tags = document.querySelector("#tags");
+let listOfTags = document.getElementById("tags");
+let ingredientags = document.getElementById("ingredientags");
+let ustensilstags = document.querySelector("#ustensilstags");
 /*console.log(
   optionsIngredients.options,
   optionsUstensils.options,
@@ -187,7 +189,6 @@ async function renderRecipes() {
         });
         updateDropDownLists(results);
         createView(results);
-        // Sinon filtré le tableau filtré
       } else {
         results = results.filter(function (e) {
           for (let j = 0; j < e.ingredients.length; j++) {
@@ -208,7 +209,9 @@ async function renderRecipes() {
       }
       console.log(results);
     } else {
-      // gérer le cas où le filtre est supprimé
+      /*results = [];
+      updateDropDownLists(recettes);
+      listRecipes.innerHTML = "";*/
     }
   });
 
@@ -223,6 +226,11 @@ async function renderRecipes() {
           }
         }
       });
+      let word = document.createElement("span");
+      ingredientags.appendChild(word);
+      ingredientags.style.marginBottom = "2%";
+      word.innerText = `${listIngredients.value}`;
+      word.setAttribute("class","blue");
       updateDropDownLists(results);
       createView(results);
     } else {
@@ -235,6 +243,11 @@ async function renderRecipes() {
           }
         }
       });
+      let word = document.createElement("span");
+      ingredientags.appendChild(word);
+      ingredientags.style.marginBottom = "2%";
+      word.innerText = `${listIngredients.value}`;
+      word.setAttribute("class","blue");
       updateDropDownLists(results);
       createView(results);
     }
