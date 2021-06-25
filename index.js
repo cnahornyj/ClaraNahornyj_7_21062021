@@ -28,11 +28,6 @@ function filterArray(arrayOfStrings) {
   return out;
 }
 
-// Fonction pour créer un tableau d'objets en retirant les doublons (par id)
-function getUniqueListBy(arr, key) {
-  return [...new Map(arr.map((item) => [item[key], item])).values()];
-}
-
 async function renderRecipes() {
   let recipes = await getData();
   let recettes = [];
@@ -176,7 +171,7 @@ async function renderRecipes() {
       }
     }
 
-    let uniqueRecipes = getUniqueListBy(recettes, "id");
+    let uniqueRecipes = [...new Set(recettes)];
     console.log(uniqueRecipes);
     // Lorsque le tri est effectué il faut mettre à jour les listes déroulantes
     listIngredients.innerHTML = "";
