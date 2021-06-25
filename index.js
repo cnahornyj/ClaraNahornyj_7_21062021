@@ -176,6 +176,8 @@ async function renderRecipes() {
         results = recipes.filter(function (e) {
           for (let j = 0; j < e.ingredients.length; j++) {
             for (let k = 0; k < e.ustensils.length; k++) {
+              /* Si la condition est remplit une première fois l'élément est retourné contrairement à la première version 
+              où on obtient un tableau avec des doublons qu'il faut traiter par la suite */
               if (
                 e.name.includes(firstResearch.value) ||
                 e.appliance.includes(firstResearch.value) ||
