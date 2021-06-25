@@ -202,7 +202,7 @@ async function renderRecipes() {
                 e.ingredients[j].ingredient.includes(firstResearch.value) ||
                 e.ustensils[k].includes(firstResearch.value)
               ) {
-                console.log(results);
+                return e;
               }
             }
           }
