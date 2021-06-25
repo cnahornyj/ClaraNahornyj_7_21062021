@@ -130,7 +130,7 @@ async function renderRecipes() {
     }
     // Supprimer les doublons (deux recettes peuvent avoir des ingrédients similaires)
     ingredients = filterArray(ingredients);
-    console.log(ingredients);
+    //console.log(ingredients);
     for (let i = 0; i < ingredients.length; i++) {
       let option = document.createElement("option");
       option.setAttribute("value", `${ingredients[i]}`);
@@ -145,7 +145,7 @@ async function renderRecipes() {
     }
     // Supprimer les doublons (deux recettes peuvent avoir des ustensiles similaires)
     ustensiles = filterArray(ustensiles);
-    console.log(ustensiles);
+    //console.log(ustensiles);
     for (let i = 0; i < ustensiles.length; i++) {
       let option = document.createElement("option");
       option.setAttribute("value", `${ustensiles[i]}`);
@@ -158,7 +158,7 @@ async function renderRecipes() {
     }
     // Supprimer les doublons (deux recettes peuvent avoir des appareils similaires)
     appareils = filterArray(appareils);
-    console.log(appareils);
+    //console.log(appareils);
     for (let i = 0; i < appareils.length; i++) {
       let option = document.createElement("option");
       option.setAttribute("value", `${appareils[i]}`);
@@ -199,7 +199,7 @@ async function renderRecipes() {
                 e.ingredients[j].ingredient.includes(firstResearch.value) ||
                 e.ustensils[k].includes(firstResearch.value)
               ) {
-                return e;
+                console.log(results);
               }
             }
           }
@@ -207,7 +207,7 @@ async function renderRecipes() {
         updateDropDownLists(results);
         createView(results);
       }
-      console.log(results);
+      //console.log(results);
     } else {
       /*results = [];
       updateDropDownLists(recettes);
