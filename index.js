@@ -161,31 +161,15 @@ async function renderRecipes() {
     console.log(value);
 
     for (let i = 0; i < recipes.length; i++) {
+      if (recipes[i].name.includes(value) || recipes[i].appliance.includes(value)) {
+        recettes.push(recipes[i]);
+      }
       for (let j = 0; j < recipes[i].ingredients.length; j++) {
+        if (recipes[i].ingredients[j].ingredient.includes(value)) {
+          recettes.push(recipes[i]);
+        }
         for (let k = 0; k < recipes[i].ustensils.length; k++) {
-          if (
-            recipes[i].name.includes(value) ||
-            recipes[i].name.includes(firstMinCharacter) ||
-            recipes[i].name.includes(firstMajCharacter)
-          ) {
-            recettes.push(recipes[i]);
-          } else if (
-            recipes[i].appliance.includes(value) ||
-            recipes[i].appliance.includes(firstMinCharacter) ||
-            recipes[i].appliance.includes(firstMajCharacter)
-          ) {
-            recettes.push(recipes[i]);
-          } else if (
-            recipes[i].ingredients[j].ingredient.includes(value) ||
-            recipes[i].ingredients[j].ingredient.includes(firstMinCharacter) ||
-            recipes[i].ingredients[j].ingredient.includes(firstMajCharacter)
-          ) {
-            recettes.push(recipes[i]);
-          } else if (
-            recipes[i].ustensils[k].includes(value) ||
-            recipes[i].ustensils[k].includes(firstMinCharacter) ||
-            recipes[i].ustensils[k].includes(firstMajCharacter)
-          ) {
+          if (recipes[i].ustensils[k].includes(value)) {
             recettes.push(recipes[i]);
           }
         }
