@@ -18,16 +18,12 @@ let listAppliances = document.querySelector("input[list=appareils]");
 let optionsAppliances = document.querySelector("#appareils");
 let listOfTags = document.getElementById("tags");
 let ingredientags = document.getElementById("ingredientags");
-let ustensilstags = document.querySelector("#ustensilstags");
-/*console.log(
-  optionsIngredients.options,
-  optionsUstensils.options,
-  optionsAppliances.options
-);*/
+let ustensilstags = document.getElementById("ustensilstags");
+let appliancestags = document.getElementById("appliancestags");
 
 let listRecipes = document.querySelector("#recipes");
 
-// Fonction pour supprimer les string en doublons
+// Fonction pour supprimer les string en doublons dans les listes déroulantes
 function filterArray(arrayOfStrings) {
   let found = {};
   let out = arrayOfStrings.filter(function (element) {
@@ -36,9 +32,13 @@ function filterArray(arrayOfStrings) {
   return out;
 }
 
-// Fonction pour créer un tableau d'objets en retirant les doublons (par id)
-function getUniqueListBy(arr, key) {
-  return [...new Map(arr.map((item) => [item[key], item])).values()];
+function createTag(typeOfTag, list, color) {
+  let word = document.createElement("span");
+  typeOfTag.appendChild(word);
+  typeOfTag.style.marginBottom = "2%";
+  typeOfTag.style.marginRight = "2%";
+  word.innerText = `${list.value}`;
+  word.setAttribute("class", color);
 }
 
 async function renderRecipes() {
@@ -113,6 +113,7 @@ async function renderRecipes() {
     }
   }
 
+  // Mettre à jour les listes déroulantes selon les recettes
   function updateDropDownLists(recipes) {
     ingredients = [];
     appareils = [];
@@ -200,7 +201,7 @@ async function renderRecipes() {
         updateDropDownLists(results);
         createView(results);
       } else {
-        // Sinon si le tableau 
+        // Sinon si le tableau
         results = results.filter(function (e) {
           if (
             e.name.includes(firstResearch.value) ||
@@ -242,29 +243,19 @@ async function renderRecipes() {
           }
         }
       });
-      let word = document.createElement("span");
-      ingredientags.appendChild(word);
-      ingredientags.style.marginBottom = "2%";
-      word.innerText = `${listIngredients.value}`;
-      word.setAttribute("class", "blue");
+      createTag(ingredientags, listIngredients, "blue");
       updateDropDownLists(results);
       createView(results);
     } else {
       results = results.filter(function (e) {
         for (let j = 0; j < e.ingredients.length; j++) {
-          for (let k = 0; k < e.ustensils.length; k++) {
-            if (e.ingredients[j].ingredient.includes(listIngredients.value)) {
-              return e;
-            }
+          if (e.ingredients[j].ingredient.includes(listIngredients.value)) {
+            return e;
           }
         }
       });
-      let word = document.createElement("span");
-      ingredientags.appendChild(word);
-      ingredientags.style.marginBottom = "2%";
-      word.innerText = `${listIngredients.value}`;
-      word.setAttribute("class", "blue");
       console.log(results);
+      createTag(ingredientags, listIngredients, "blue");
       updateDropDownLists(results);
       createView(results);
     }
@@ -273,26 +264,24 @@ async function renderRecipes() {
   listUstensils.addEventListener("change", function () {
     if (results.length === 0) {
       results = recettes.filter(function (e) {
-        for (let j = 0; j < e.ingredients.length; j++) {
-          for (let k = 0; k < e.ustensils.length; k++) {
-            if (e.ustensils[k].includes(listUstensils.value)) {
-              return e;
-            }
+        for (let k = 0; k < e.ustensils.length; k++) {
+          if (e.ustensils[k].includes(listUstensils.value)) {
+            return e;
           }
         }
       });
+      createTag(ustensilstags, listUstensils, "green");
       updateDropDownLists(results);
       createView(results);
     } else {
       results = results.filter(function (e) {
-        for (let j = 0; j < e.ingredients.length; j++) {
-          for (let k = 0; k < e.ustensils.length; k++) {
-            if (e.ustensils[k].includes(listUstensils.value)) {
-              return e;
-            }
+        for (let k = 0; k < e.ustensils.length; k++) {
+          if (e.ustensils[k].includes(listUstensils.value)) {
+            return e;
           }
         }
       });
+      createTag(ustensilstags, listUstensils, "green");
       updateDropDownLists(results);
       createView(results);
     }
@@ -306,6 +295,7 @@ async function renderRecipes() {
           return e;
         }
       });
+      createTag(appliancestags, listAppliances, "red");
       updateDropDownLists(results);
       createView(results);
     } else {
@@ -314,6 +304,7 @@ async function renderRecipes() {
           return e;
         }
       });
+      createTag(appliancestags, listAppliances, "red");
       updateDropDownLists(results);
       createView(results);
     }
