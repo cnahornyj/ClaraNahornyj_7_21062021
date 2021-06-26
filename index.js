@@ -19,61 +19,50 @@ let optionsAppliances = document.querySelector("#appareils");
 
 let listRecipes = document.querySelector("#recipes");
 
-// Fonction pour supprimer les string en doublons
-function filterArray(arrayOfStrings) {
-  let found = {};
-  let out = arrayOfStrings.filter(function (element) {
-    return found.hasOwnProperty(element) ? false : (found[element] = true);
-  });
-  return out;
-}
-
 async function renderRecipes() {
   let recipes = await getData();
-  let recettes = [];
+  let recettes = recipes;
+  let results = [];
   let ingredients = [];
   let appareils = [];
   let ustensiles = [];
 
-  function drawUpTheDropDownLists(object) {
-    // Cette partie devra être exécutée pour MAJ les listes déroulantes à partir du tableau d'objets
-    //qui ressort de applyFilter(value)
+  function updateTheDropDownLists(object) {
+    /* Mettre dans un tableau initialement vide 
+    chaque ingrédient de chaque recette */
     for (let i = 0; i < object.length; i++) {
       for (let j = 0; j < object[i].ingredients.length; j++) {
         let food = object[i].ingredients[j].ingredient;
         ingredients.push(food);
       }
     }
-    ingredients = filterArray(ingredients);
-    //console.log(ingredients);
-
-    for (let i = 0; i < ingredients.length; i++) {
-      let option = document.createElement("option");
-      option.setAttribute("value", `${ingredients[i]}`);
-      optionsIngredients.appendChild(option);
-    }
-
+    /* Initialiser un ensemble Set avec le tableau de strings au constructeur 
+    pour supprimer les ingrédients en doublons */
+    ingredients = [...new Set(ingredients)];
     for (let i = 0; i < object.length; i++) {
       for (let j = 0; j < object[i].ustensils.length; j++) {
         let kitchen = object[i].ustensils[j];
         ustensiles.push(kitchen);
       }
     }
-    ustensiles = filterArray(ustensiles);
-    //console.log(ingredients);
-    
+    ustensiles = [...new Set(ustensiles)];
+    for (let i = 0; i < object.length; i++) {
+      let outil = object[i].appliance;
+      appareils.push(outil);
+    }
+    appareils = [...new Set(appareils)];
+
+    // Ajouter les options et leurs valeurs aux différentes datalists
+    for (let i = 0; i < ingredients.length; i++) {
+      let option = document.createElement("option");
+      option.setAttribute("value", `${ingredients[i]}`);
+      optionsIngredients.appendChild(option);
+    }
     for (let i = 0; i < ustensiles.length; i++) {
       let option = document.createElement("option");
       option.setAttribute("value", `${ustensiles[i]}`);
       optionsUstensils.appendChild(option);
     }
-
-    for (let i = 0; i < object.length; i++) {
-      let outil = object[i].appliance;
-      appareils.push(outil);
-    }
-    appareils = filterArray(appareils);
-
     for (let i = 0; i < appareils.length; i++) {
       let option = document.createElement("option");
       option.setAttribute("value", `${appareils[i]}`);
@@ -81,11 +70,9 @@ async function renderRecipes() {
     }
   }
 
-  drawUpTheDropDownLists(recipes);
   /* Les liste déroulantes doivent être initialisés avec tous les éléments
-    drawUpTheDropDownLists(recipes);*/
-
-  //drawUpTheDropDownLists(recipes);
+  de toutes les recettes ;*/
+  updateTheDropDownLists(recettes);
 
   function createView(objects) {
     // Pour chaque recette création des éléments DOM
@@ -155,40 +142,48 @@ async function renderRecipes() {
     let firstMajCharacter = value[0].toLowerCase() + value.slice(1);
     console.log(value);
 
-    for (let i = 0; i < recipes.length; i++) {
-      if (recipes[i].name.includes(value) || recipes[i].appliance.includes(value)) {
-        recettes.push(recipes[i]);
+    for (let i = 0; i < recettes.length; i++) {
+      if (
+        recettes[i].name.includes(value) ||
+        recettes[i].appliance.includes(value)
+      ) {
+        results.push(recettes[i]);
       }
-      for (let j = 0; j < recipes[i].ingredients.length; j++) {
-        if (recipes[i].ingredients[j].ingredient.includes(value)) {
-          recettes.push(recipes[i]);
+      for (let j = 0; j < recettes[i].ingredients.length; j++) {
+        if (recettes[i].ingredients[j].ingredient.includes(value)) {
+          results.push(recettes[i]);
         }
-        for (let k = 0; k < recipes[i].ustensils.length; k++) {
-          if (recipes[i].ustensils[k].includes(value)) {
-            recettes.push(recipes[i]);
+        for (let k = 0; k < recettes[i].ustensils.length; k++) {
+          if (recettes[i].ustensils[k].includes(value)) {
+            results.push(recettes[i]);
           }
         }
       }
     }
 
-    let uniqueRecipes = [...new Set(recettes)];
-    console.log(uniqueRecipes);
-    // Lorsque le tri est effectué il faut mettre à jour les listes déroulantes
-    listIngredients.innerHTML = "";
-    drawUpTheDropDownLists(uniqueRecipes);
-    createView(uniqueRecipes);
+    let uniquerecettes = [...new Set(results)];
+    console.log(uniquerecettes);
+    /* Lorsque le tri est effectué il faut vider les listes déroulantes 
+    et les mettre à jour avec les ingrédients, ustensiles, appareils des recettes restantes */
+    optionsIngredients.innerHTML = "";
+    optionsUstensils.innerHTML = "";
+    optionsAppliances.innerHTML = "";
+    ingredients = [];
+    appareils = [];
+    ustensiles = [];
+    updateTheDropDownLists(uniquerecettes);
+    createView(uniquerecettes);
   }
 
-  // onchange un input à partir de 3 caractères
   firstResearch.addEventListener("input", function () {
-    // Il va falloir appeler la fonction à chaque saisie de caractère
+    // Exécution de la fonction à chaque saisie de caractère
     if (firstResearch.value.length >= 3) {
       listRecipes.innerHTML = "";
-      recettes = [];
+      results = [];
       applyFilter(firstResearch.value);
     } else {
       listRecipes.innerHTML = "";
-      recettes = [];
+      results = [];
     }
   });
 }
