@@ -169,7 +169,10 @@ async function renderRecipes() {
   updateDropDownLists(recettes);
 
   firstResearch.addEventListener("input", function () {
-    // Si la valeur de l'input est égale ou supérieure à 3 caractères REINITIALISATION
+    /* Si la valeur de l'input est égale ou supérieure à 3 caractères REINITIALISATION
+    Sensibilité à la casse
+    let firstMinCharacter = firstResearch.value[0].toUpperCase() + firstResearch.value.slice(1);
+    let firstMajCharacter = firstResearch.value[0].toLowerCase() + firstResearch.value.slice(1); */
     if (firstResearch.value.length >= 3) {
       // Si 1er tableau filtré inexistant filtré le tableau de base
       if (results.length === 0) {
@@ -197,7 +200,8 @@ async function renderRecipes() {
         updateDropDownLists(results);
         createView(results);
       } else {
-        results = recipes.filter(function (e) {
+        // Sinon si le tableau 
+        results = results.filter(function (e) {
           if (
             e.name.includes(firstResearch.value) ||
             e.appliance.includes(firstResearch.value)
@@ -217,11 +221,12 @@ async function renderRecipes() {
             }
           }
         });
+        console.log(results);
         updateDropDownLists(results);
         createView(results);
       }
-      //console.log(results);
     } else {
+      // Tout réinitialiser
       results = [];
       updateDropDownLists(recipes);
       listRecipes.innerHTML = "";
@@ -232,10 +237,8 @@ async function renderRecipes() {
     if (results.length === 0) {
       results = recettes.filter(function (e) {
         for (let j = 0; j < e.ingredients.length; j++) {
-          for (let k = 0; k < e.ustensils.length; k++) {
-            if (e.ingredients[j].ingredient.includes(listIngredients.value)) {
-              return e;
-            }
+          if (e.ingredients[j].ingredient.includes(listIngredients.value)) {
+            return e;
           }
         }
       });
@@ -261,10 +264,10 @@ async function renderRecipes() {
       ingredientags.style.marginBottom = "2%";
       word.innerText = `${listIngredients.value}`;
       word.setAttribute("class", "blue");
+      console.log(results);
       updateDropDownLists(results);
       createView(results);
     }
-    console.log(results);
   });
 
   listUstensils.addEventListener("change", function () {
