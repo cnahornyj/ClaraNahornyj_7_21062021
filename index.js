@@ -174,16 +174,20 @@ async function renderRecipes() {
       // Si 1er tableau filtré inexistant filtré le tableau de base
       if (results.length === 0) {
         results = recipes.filter(function (e) {
+          if (
+            e.name.includes(firstResearch.value) ||
+            e.appliance.includes(firstResearch.value)
+          ) {
+            return e;
+          }
           for (let j = 0; j < e.ingredients.length; j++) {
+            if (e.ingredients[j].ingredient.includes(firstResearch.value)) {
+              return e;
+            }
             for (let k = 0; k < e.ustensils.length; k++) {
               /* Si la condition est remplit une première fois l'élément est retourné contrairement à la première version 
               où on obtient un tableau avec des doublons qu'il faut traiter par la suite */
-              if (
-                e.name.includes(firstResearch.value) ||
-                e.appliance.includes(firstResearch.value) ||
-                e.ingredients[j].ingredient.includes(firstResearch.value) ||
-                e.ustensils[k].includes(firstResearch.value)
-              ) {
+              if (e.ustensils[k].includes(firstResearch.value)) {
                 return e;
               }
             }
@@ -193,15 +197,21 @@ async function renderRecipes() {
         updateDropDownLists(results);
         createView(results);
       } else {
-        results = results.filter(function (e) {
+        results = recipes.filter(function (e) {
+          if (
+            e.name.includes(firstResearch.value) ||
+            e.appliance.includes(firstResearch.value)
+          ) {
+            return e;
+          }
           for (let j = 0; j < e.ingredients.length; j++) {
+            if (e.ingredients[j].ingredient.includes(firstResearch.value)) {
+              return e;
+            }
             for (let k = 0; k < e.ustensils.length; k++) {
-              if (
-                e.name.includes(firstResearch.value) ||
-                e.appliance.includes(firstResearch.value) ||
-                e.ingredients[j].ingredient.includes(firstResearch.value) ||
-                e.ustensils[k].includes(firstResearch.value)
-              ) {
+              /* Si la condition est remplit une première fois l'élément est retourné contrairement à la première version 
+              où on obtient un tableau avec des doublons qu'il faut traiter par la suite */
+              if (e.ustensils[k].includes(firstResearch.value)) {
                 return e;
               }
             }
@@ -212,9 +222,9 @@ async function renderRecipes() {
       }
       //console.log(results);
     } else {
-      /*results = [];
-      updateDropDownLists(recettes);
-      listRecipes.innerHTML = "";*/
+      results = [];
+      updateDropDownLists(recipes);
+      listRecipes.innerHTML = "";
     }
   });
 
@@ -233,7 +243,7 @@ async function renderRecipes() {
       ingredientags.appendChild(word);
       ingredientags.style.marginBottom = "2%";
       word.innerText = `${listIngredients.value}`;
-      word.setAttribute("class","blue");
+      word.setAttribute("class", "blue");
       updateDropDownLists(results);
       createView(results);
     } else {
@@ -250,7 +260,7 @@ async function renderRecipes() {
       ingredientags.appendChild(word);
       ingredientags.style.marginBottom = "2%";
       word.innerText = `${listIngredients.value}`;
-      word.setAttribute("class","blue");
+      word.setAttribute("class", "blue");
       updateDropDownLists(results);
       createView(results);
     }
