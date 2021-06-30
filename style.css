@@ -1,5 +1,7 @@
 .height{
   height: 100%;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }
 
 .blue{
@@ -22,6 +24,11 @@
   border-radius: 5px;
   width: 200px;
   padding: 10px;
+}
+
+.grey{
+  background-color: #E9ECF0;
+  border-right-color: #E9ECF0;
 }
 
 .margin{
@@ -52,4 +59,23 @@
 
 li{
   list-style-type: none;
+}
+
+.visible{
+  display: block;
+}
+
+.hidden {
+  display: none;
+}
+
+ul#ingredients{
+  background-color: #3282f7;
+  width: 50%;
+  color: white;
+  column-count: 3;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  padding: 10px 0 10px 8px;
 }

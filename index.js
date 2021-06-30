@@ -133,9 +133,9 @@ async function renderRecipes() {
     ingredients = filterArray(ingredients);
     //console.log(ingredients);
     for (let i = 0; i < ingredients.length; i++) {
-      let option = document.createElement("option");
-      option.setAttribute("value", `${ingredients[i]}`);
-      optionsIngredients.appendChild(option);
+      let item = document.createElement("li");
+      item.innerText = `${ingredients[i]}`;
+      optionsIngredients.appendChild(item);
     }
     // Pour chaque ustensile dans chaque recette --> ustensiles[]
     for (let i = 0; i < recipes.length; i++) {
@@ -234,6 +234,35 @@ async function renderRecipes() {
     }
   });
 
+  listIngredients.addEventListener("click", function () {
+    optionsIngredients.classList.remove("hidden");
+    optionsIngredients.classList.add("visible");
+  });
+
+  listIngredients.addEventListener("input", function () {
+    for (let i = 0; i < ingredients.length; i++) {
+      if (listIngredients.value.includes(ingredients[i])) {
+        ingredients = [];
+        ingredients.push(ingredients[i]);
+      }
+    }
+  });
+
+  optionsIngredients.addEventListener("mouseleave", function () {
+    optionsIngredients.classList.remove("visible");
+    optionsIngredients.classList.add("hidden");
+  });
+
+  let items = document.querySelectorAll("ul#ingredients > li");
+  console.log(items);
+  for (let i = 0; i < items.length; i++) {
+    items[i].addEventListener("click", function () {
+      listIngredients.value = items[i].innerText;
+      optionsIngredients.classList.remove("visible");
+      optionsIngredients.classList.add("hidden");
+    });
+  }
+
   listIngredients.addEventListener("change", function () {
     if (results.length === 0) {
       results = recettes.filter(function (e) {
@@ -243,6 +272,8 @@ async function renderRecipes() {
           }
         }
       });
+      optionsIngredients.classList.remove("visible");
+      optionsIngredients.classList.add("hidden");
       createTag(ingredientags, listIngredients, "blue");
       updateDropDownLists(results);
       createView(results);
@@ -254,6 +285,8 @@ async function renderRecipes() {
           }
         }
       });
+      optionsIngredients.classList.remove("visible");
+      optionsIngredients.classList.add("hidden");
       console.log(results);
       createTag(ingredientags, listIngredients, "blue");
       updateDropDownLists(results);
@@ -270,7 +303,7 @@ async function renderRecipes() {
           }
         }
       });
-      createTag(ustensilstags, listUstensils, "green");
+      createTag(ustensilstags, listUstensils, "red");
       updateDropDownLists(results);
       createView(results);
     } else {
@@ -281,7 +314,7 @@ async function renderRecipes() {
           }
         }
       });
-      createTag(ustensilstags, listUstensils, "green");
+      createTag(ustensilstags, listUstensils, "red");
       updateDropDownLists(results);
       createView(results);
     }
@@ -295,7 +328,7 @@ async function renderRecipes() {
           return e;
         }
       });
-      createTag(appliancestags, listAppliances, "red");
+      createTag(appliancestags, listAppliances, "green");
       updateDropDownLists(results);
       createView(results);
     } else {
@@ -304,7 +337,7 @@ async function renderRecipes() {
           return e;
         }
       });
-      createTag(appliancestags, listAppliances, "red");
+      createTag(appliancestags, listAppliances, "green");
       updateDropDownLists(results);
       createView(results);
     }

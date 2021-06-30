@@ -22,7 +22,7 @@
           <input
             type="text"
             id="first-research"
-            class="form-control"
+            class="form-control grey"
             placeholder="Recherche un ingrédient, un appareil, ustensiles ou une recette"
           />
           <div class="input-group-append">
@@ -36,14 +36,17 @@
           <div id="ustensilstags"></div>
           <div id="appliancestags"></div>
         </div>
-        <div class="row margin">
+        <div class="margin">
           <input class="blue" list="ingredients" placeholder="Ingredients" />
-          <datalist id="ingredients"></datalist>
-          <input class="green" list="ustensiles" placeholder="Ustensiles" />
-          <datalist id="ustensiles"></datalist>
-          <input class="red" list="appareils" placeholder="Appareils" />
-          <datalist id="appareils"></datalist>
+          <ul id="ingredients" class="hidden">
+          </ul>
+          
         </div>
+        <!--<datalist id="ingredients"></datalist>-->
+          <input class="green" list="appareils" placeholder="Appareils" />
+          <datalist id="appareils"></datalist>
+          <input class="red" list="ustensiles" placeholder="Ustensiles" />
+          <datalist id="ustensiles"></datalist>
         <div class="row" id="recipes"></div>
       </div>
     </div>
