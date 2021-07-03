@@ -140,21 +140,33 @@ async function renderRecipes() {
     // Gérer la sensibilité à la casse
     let firstMinCharacter = value[0].toUpperCase() + value.slice(1);
     let firstMajCharacter = value[0].toLowerCase() + value.slice(1);
-    console.log(value);
+    console.log(value,firstMinCharacter,firstMajCharacter);
 
     for (let i = 0; i < recettes.length; i++) {
       if (
         recettes[i].name.includes(value) ||
-        recettes[i].appliance.includes(value)
+        recettes[i].name.includes(firstMinCharacter) ||
+        recettes[i].name.includes(firstMajCharacter) ||
+        recettes[i].appliance.includes(value) ||
+        recettes[i].appliance.includes(firstMinCharacter) ||
+        recettes[i].appliance.includes(firstMajCharacter)
       ) {
         results.push(recettes[i]);
       }
       for (let j = 0; j < recettes[i].ingredients.length; j++) {
-        if (recettes[i].ingredients[j].ingredient.includes(value)) {
+        if (
+          recettes[i].ingredients[j].ingredient.includes(value) ||
+          recettes[i].ingredients[j].ingredient.includes(firstMinCharacter) ||
+          recettes[i].ingredients[j].ingredient.includes(firstMajCharacter)
+        ) {
           results.push(recettes[i]);
         }
         for (let k = 0; k < recettes[i].ustensils.length; k++) {
-          if (recettes[i].ustensils[k].includes(value)) {
+          if (
+            recettes[i].ustensils[k].includes(value) ||
+            recettes[i].ustensils[k].includes(firstMinCharacter) ||
+            recettes[i].ustensils[k].includes(firstMajCharacter)
+          ) {
             results.push(recettes[i]);
           }
         }
