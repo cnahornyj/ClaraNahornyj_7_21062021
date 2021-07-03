@@ -12,14 +12,14 @@ let firstResearch = document.getElementById("first-research");
 
 let listIngredients = document.querySelector("input[list=ingredients]");
 let optionsIngredients = document.querySelector("#ingredients");
-let listUstensils = document.querySelector("#listOfUstensils");
+let listUstensils = document.querySelector("input[list=ustensiles]");
 let optionsUstensils = document.querySelector("#ustensiles");
-let listAppliances = document.querySelector("#listOfAppliances");
+let listAppliances = document.querySelector("input[list=appareils]");
 let optionsAppliances = document.querySelector("#appareils");
 
 let listRecipes = document.querySelector("#recipes");
 
-function createEltsOfDropDownList(array,optionsElts){
+function createEltsOfDropDownList(array, optionsElts) {
   for (let i = 0; i < array.length; i++) {
     let item = document.createElement("li");
     item.innerText = `${array[i]}`;
@@ -48,7 +48,6 @@ async function renderRecipes() {
     pour supprimer les ingrédients en doublons */
     ingredients = [...new Set(ingredients)];
 
-
     for (let i = 0; i < object.length; i++) {
       for (let j = 0; j < object[i].ustensils.length; j++) {
         let kitchen = object[i].ustensils[j];
@@ -56,7 +55,6 @@ async function renderRecipes() {
       }
     }
     ustensiles = [...new Set(ustensiles)];
-    console.log(ustensiles);
 
     for (let i = 0; i < object.length; i++) {
       let outil = object[i].appliance;
@@ -65,9 +63,9 @@ async function renderRecipes() {
     appareils = [...new Set(appareils)];
 
     // Ajouter les li aux différentes listes ul
-    createEltsOfDropDownList(ingredients,optionsIngredients);
-    createEltsOfDropDownList(ustensiles,optionsUstensils);
-    createEltsOfDropDownList(appareils,optionsAppliances);
+    createEltsOfDropDownList(ingredients, optionsIngredients);
+    createEltsOfDropDownList(ustensiles, optionsUstensils);
+    createEltsOfDropDownList(appareils, optionsAppliances);
   }
 
   /* Les liste déroulantes doivent être initialisés avec tous les éléments
@@ -140,7 +138,7 @@ async function renderRecipes() {
     // Gérer la sensibilité à la casse
     let firstMinCharacter = value[0].toUpperCase() + value.slice(1);
     let firstMajCharacter = value[0].toLowerCase() + value.slice(1);
-    console.log(value,firstMinCharacter,firstMajCharacter);
+    console.log(value, firstMinCharacter, firstMajCharacter);
 
     for (let i = 0; i < recettes.length; i++) {
       if (
@@ -198,7 +196,6 @@ async function renderRecipes() {
       results = [];
     }
   });
-
 
   listIngredients.addEventListener("click", function () {
     optionsIngredients.classList.remove("hidden");
@@ -310,7 +307,6 @@ async function renderRecipes() {
     }
     console.log(results);
   });
-  
 }
 
 renderRecipes();
