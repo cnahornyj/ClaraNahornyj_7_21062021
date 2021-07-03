@@ -31,23 +31,26 @@
             ></span>
           </div>
         </div>
-        <div class="row" id="tags">
+        <div id="tags" style="display:flex">
           <div id="ingredientags"></div>
-          <div id="ustensilstags"></div>
           <div id="appliancestags"></div>
+          <div id="ustensilstags"></div>
         </div>
-        <div class="margin">
-          <input class="blue" list="ingredients" placeholder="Ingredients" />
-          <ul id="ingredients" class="hidden">
-          </ul>
-          
+        <div style="display:flex">
+          <div>
+            <input class="blue" list="ingredients" placeholder="Ingredients" />
+            <ul id="ingredients" class="hidden"></ul>
+          </div>
+          <div>
+            <input class="green" list="appareils" placeholder="Appareils" />
+            <ul id="appareils" class="hidden"></ul>
+          </div>
+          <div>
+            <input class="red" list="ustensiles" placeholder="Ustensiles" />
+            <ul id="ustensiles" class="hidden"></ul>
+          </div>
         </div>
-        <!--<datalist id="ingredients"></datalist>-->
-          <input class="green" list="appareils" placeholder="Appareils" />
-          <datalist id="appareils"></datalist>
-          <input class="red" list="ustensiles" placeholder="Ustensiles" />
-          <datalist id="ustensiles"></datalist>
-        <div class="row" id="recipes"></div>
+        <div class="row" id="recipes" style="margin-top:2%"></div>
       </div>
     </div>
     <script src="index.js"></script>
