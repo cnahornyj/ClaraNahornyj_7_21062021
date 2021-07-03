@@ -23,15 +23,6 @@ let appliancestags = document.getElementById("appliancestags");
 
 let listRecipes = document.querySelector("#recipes");
 
-// Fonction pour supprimer les string en doublons dans les listes déroulantes
-function filterArray(arrayOfStrings) {
-  let found = {};
-  let out = arrayOfStrings.filter(function (element) {
-    return found.hasOwnProperty(element) ? false : (found[element] = true);
-  });
-  return out;
-}
-
 function createTag(typeOfTag, list, color) {
   let word = document.createElement("span");
   typeOfTag.appendChild(word);
@@ -39,6 +30,14 @@ function createTag(typeOfTag, list, color) {
   typeOfTag.style.marginRight = "2%";
   word.innerText = `${list.value}`;
   word.setAttribute("class", color);
+}
+
+function createEltsOfDropDownList(array,optionsElts){
+  for (let i = 0; i < array.length; i++) {
+    let item = document.createElement("li");
+    item.innerText = `${array[i]}`;
+    optionsElts.appendChild(item);
+  }
 }
 
 async function renderRecipes() {
@@ -130,14 +129,9 @@ async function renderRecipes() {
       }
     }
     // Supprimer les doublons (deux recettes peuvent avoir des ingrédients similaires)
-    ingredients = filterArray(ingredients);
-
-    // Pour chaque ingrédient dans la liste ul des ingrédients créé les li
-    for (let i = 0; i < ingredients.length; i++) {
-      let item = document.createElement("li");
-      item.innerText = `${ingredients[i]}`;
-      optionsIngredients.appendChild(item);
-    }
+    ingredients = [...new Set(ingredients)];
+    // Pour chaque ingrédient dans la liste ul des ingrédients création des li
+    createEltsOfDropDownList(ingredients,optionsIngredients);
 
     // Pour chaque ustensile dans chaque recette --> ustensiles[]
     for (let i = 0; i < recipes.length; i++) {
@@ -147,43 +141,37 @@ async function renderRecipes() {
       }
     }
     // Supprimer les doublons (deux recettes peuvent avoir des ustensiles similaires)
-    ustensiles = filterArray(ustensiles);
+    ustensiles = [...new Set(ustensiles)];
+    // Pour chaque ingrédient dans la liste ul des ingrédients création des li
+    createEltsOfDropDownList(ustensiles,optionsUstensils);
 
-    // Pour chaque ingrédient dans la liste ul des ingrédients créé les li
-    for (let i = 0; i < ustensiles.length; i++) {
-      let item = document.createElement("li");
-      item.innerText = `${ustensiles[i]}`;
-      optionsUstensils.appendChild(item);
-    }
     // Pour chaque appareil dans chaque recette --> appareils[]
     for (let i = 0; i < recipes.length; i++) {
       let outil = recipes[i].appliance;
       appareils.push(outil);
     }
     // Supprimer les doublons (deux recettes peuvent avoir des appareils similaires)
-    appareils = filterArray(appareils);
-
-    // Pour chaque ingrédient dans la liste ul des ingrédients créé les li
-    for (let i = 0; i < appareils.length; i++) {
-      let item = document.createElement("li");
-      item.innerText = `${appareils[i]}`;
-      optionsAppliances.appendChild(item);
-    }
+    appareils = [...new Set(appareils)];
+    // Pour chaque ingrédient dans la liste ul des ingrédients création des li
+    createEltsOfDropDownList(appareils,optionsAppliances);
   }
 
   updateDropDownLists(recettes);
 
   firstResearch.addEventListener("input", function () {
-    /* Si la valeur de l'input est égale ou supérieure à 3 caractères REINITIALISATION
-    Sensibilité à la casse */
+    // Sensibilité à la casse
     let firstMinCharacter =
       firstResearch.value[0].toUpperCase() + firstResearch.value.slice(1);
     let firstMajCharacter =
       firstResearch.value[0].toLowerCase() + firstResearch.value.slice(1);
+
+    // Si la valeur de l'input est égale ou supérieure à 3 caractères REINITIALISATION
     if (firstResearch.value.length >= 3) {
       // Si 1er tableau filtré inexistant filtré le tableau de base
       if (results.length === 0) {
         results = recipes.filter(function (e) {
+          /* Si la condition est remplie une première fois l'élément est retourné contrairement à la première version 
+          où on obtient un tableau avec des doublons qu'il faut traiter par la suite */
           if (
             e.name.includes(firstResearch.value) ||
             e.name.includes(firstMinCharacter) ||
@@ -203,8 +191,6 @@ async function renderRecipes() {
               return e;
             }
             for (let k = 0; k < e.ustensils.length; k++) {
-              /* Si la condition est remplit une première fois l'élément est retourné contrairement à la première version 
-              où on obtient un tableau avec des doublons qu'il faut traiter par la suite */
               if (
                 e.ustensils[k].includes(firstResearch.value) ||
                 e.ustensils[k].includes(firstMinCharacter) ||
@@ -216,10 +202,12 @@ async function renderRecipes() {
           }
         });
         console.log(results);
+        // Mettre à jour les listes déroulantes avec les éléments des recettes restantes
         updateDropDownLists(results);
+        // Mettre à jour la vue avec les recettes restantes
         createView(results);
       } else {
-        // Sinon si le tableau
+      // Sinon si le tableau filtré existant filtré celui ci
         results = results.filter(function (e) {
           if (
             e.name.includes(firstResearch.value) ||
@@ -253,11 +241,13 @@ async function renderRecipes() {
           }
         });
         console.log(results);
+        // Mettre à jour les listes déroulantes avec les éléments des recettes restantes
         updateDropDownLists(results);
+        // Mettre à jour la vue avec les recettes restantes
         createView(results);
       }
+    // Sinon si la valeur de l'input est inférieure à 3 caractères TOUT réinitialiser
     } else {
-      // Tout réinitialiser
       results = [];
       updateDropDownLists(recipes);
       listRecipes.innerHTML = "";
