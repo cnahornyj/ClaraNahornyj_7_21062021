@@ -19,6 +19,14 @@ let optionsAppliances = document.querySelector("#appareils");
 
 let listRecipes = document.querySelector("#recipes");
 
+function createEltsOfDropDownList(array,optionsElts){
+  for (let i = 0; i < array.length; i++) {
+    let item = document.createElement("li");
+    item.innerText = `${array[i]}`;
+    optionsElts.appendChild(item);
+  }
+}
+
 async function renderRecipes() {
   let recipes = await getData();
   let recettes = recipes;
@@ -52,22 +60,10 @@ async function renderRecipes() {
     }
     appareils = [...new Set(appareils)];
 
-    // Ajouter les options et leurs valeurs aux différentes datalists
-    for (let i = 0; i < ingredients.length; i++) {
-      let option = document.createElement("option");
-      option.setAttribute("value", `${ingredients[i]}`);
-      optionsIngredients.appendChild(option);
-    }
-    for (let i = 0; i < ustensiles.length; i++) {
-      let option = document.createElement("option");
-      option.setAttribute("value", `${ustensiles[i]}`);
-      optionsUstensils.appendChild(option);
-    }
-    for (let i = 0; i < appareils.length; i++) {
-      let option = document.createElement("option");
-      option.setAttribute("value", `${appareils[i]}`);
-      optionsAppliances.appendChild(option);
-    }
+    // Ajouter les li aux différentes listes ul
+    createEltsOfDropDownList(ingredients,optionsIngredients);
+    createEltsOfDropDownList(ustensiles,listUstensils);
+    createEltsOfDropDownList(appareils,listAppliances);
   }
 
   /* Les liste déroulantes doivent être initialisés avec tous les éléments
@@ -198,6 +194,7 @@ async function renderRecipes() {
       results = [];
     }
   });
+  
 }
 
 renderRecipes();
