@@ -24,6 +24,7 @@
   border-radius: 5px;
   width: 200px;
   padding: 10px;
+  margin-right: 17px;
 }
 
 .grey{
@@ -69,9 +70,27 @@ li{
   display: none;
 }
 
-ul#ingredients{
+#ingredients{
   background-color: #3282f7;
-  width: 50%;
+}
+
+#appareils{
+  background-color: #68D9A4;
+}
+
+#ustensiles{
+  background-color: #ED6454;
+}
+ul#ingredients{
+  width: 40%;
+}
+
+ul#appareils,ul#ustensiles{
+width: 30%;
+}
+
+ul#ingredients,ul#appareils,ul#ustensiles{
+  position: absolute;
   color: white;
   column-count: 3;
   border-top-right-radius: 5px;
