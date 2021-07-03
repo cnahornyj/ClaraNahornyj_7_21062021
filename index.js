@@ -27,6 +27,15 @@ function createEltsOfDropDownList(array, optionsElts) {
   }
 }
 
+function createTag(typeOfTag, list, color) {
+  let word = document.createElement("span");
+  typeOfTag.appendChild(word);
+  typeOfTag.style.marginBottom = "2%";
+  typeOfTag.style.marginRight = "2%";
+  word.innerText = `${list.value}`;
+  word.setAttribute("class", color);
+}
+
 async function renderRecipes() {
   let recipes = await getData();
   let recettes = recipes;
