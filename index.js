@@ -248,7 +248,7 @@ async function renderRecipes() {
       optionsIngredients.classList.remove("visible");
       optionsIngredients.classList.add("hidden");
       createTag(ingredientags, listIngredients, "blue");
-      updateDropDownLists(results);
+      updateTheDropDownLists(results);
       createView(results);
     } else {
       results = results.filter(function (e) {
@@ -262,7 +262,7 @@ async function renderRecipes() {
       optionsIngredients.classList.add("hidden");
       console.log(results);
       createTag(ingredientags, listIngredients, "blue");
-      updateDropDownLists(results);
+      updateTheDropDownLists(results);
       createView(results);
     }
   });
@@ -277,7 +277,7 @@ async function renderRecipes() {
         }
       });
       createTag(ustensilstags, listUstensils, "red");
-      updateDropDownLists(results);
+      updateTheDropDownLists(results);
       createView(results);
     } else {
       results = results.filter(function (e) {
@@ -288,7 +288,7 @@ async function renderRecipes() {
         }
       });
       createTag(ustensilstags, listUstensils, "red");
-      updateDropDownLists(results);
+      updateTheDropDownLists(results);
       createView(results);
     }
     console.log(results);
@@ -302,7 +302,7 @@ async function renderRecipes() {
         }
       });
       createTag(appliancestags, listAppliances, "green");
-      updateDropDownLists(results);
+      updateTheDropDownLists(results);
       createView(results);
     } else {
       results = results.filter(function (e) {
@@ -311,7 +311,7 @@ async function renderRecipes() {
         }
       });
       createTag(appliancestags, listAppliances, "green");
-      updateDropDownLists(results);
+      updateTheDropDownLists(results);
       createView(results);
     }
     console.log(results);
