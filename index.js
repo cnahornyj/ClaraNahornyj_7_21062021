@@ -131,12 +131,14 @@ async function renderRecipes() {
     }
     // Supprimer les doublons (deux recettes peuvent avoir des ingrédients similaires)
     ingredients = filterArray(ingredients);
-    //console.log(ingredients);
+
+    // Pour chaque ingrédient dans la liste ul des ingrédients créé les li
     for (let i = 0; i < ingredients.length; i++) {
       let item = document.createElement("li");
       item.innerText = `${ingredients[i]}`;
       optionsIngredients.appendChild(item);
     }
+
     // Pour chaque ustensile dans chaque recette --> ustensiles[]
     for (let i = 0; i < recipes.length; i++) {
       for (let j = 0; j < recipes[i].ustensils.length; j++) {
@@ -146,11 +148,12 @@ async function renderRecipes() {
     }
     // Supprimer les doublons (deux recettes peuvent avoir des ustensiles similaires)
     ustensiles = filterArray(ustensiles);
-    //console.log(ustensiles);
+
+    // Pour chaque ingrédient dans la liste ul des ingrédients créé les li
     for (let i = 0; i < ustensiles.length; i++) {
-      let option = document.createElement("option");
-      option.setAttribute("value", `${ustensiles[i]}`);
-      optionsUstensils.appendChild(option);
+      let item = document.createElement("li");
+      item.innerText = `${ustensiles[i]}`;
+      optionsUstensils.appendChild(item);
     }
     // Pour chaque appareil dans chaque recette --> appareils[]
     for (let i = 0; i < recipes.length; i++) {
@@ -159,11 +162,12 @@ async function renderRecipes() {
     }
     // Supprimer les doublons (deux recettes peuvent avoir des appareils similaires)
     appareils = filterArray(appareils);
-    //console.log(appareils);
+
+    // Pour chaque ingrédient dans la liste ul des ingrédients créé les li
     for (let i = 0; i < appareils.length; i++) {
-      let option = document.createElement("option");
-      option.setAttribute("value", `${appareils[i]}`);
-      optionsAppliances.appendChild(option);
+      let item = document.createElement("li");
+      item.innerText = `${appareils[i]}`;
+      optionsAppliances.appendChild(item);
     }
   }
 
@@ -171,27 +175,41 @@ async function renderRecipes() {
 
   firstResearch.addEventListener("input", function () {
     /* Si la valeur de l'input est égale ou supérieure à 3 caractères REINITIALISATION
-    Sensibilité à la casse
-    let firstMinCharacter = firstResearch.value[0].toUpperCase() + firstResearch.value.slice(1);
-    let firstMajCharacter = firstResearch.value[0].toLowerCase() + firstResearch.value.slice(1); */
+    Sensibilité à la casse */
+    let firstMinCharacter =
+      firstResearch.value[0].toUpperCase() + firstResearch.value.slice(1);
+    let firstMajCharacter =
+      firstResearch.value[0].toLowerCase() + firstResearch.value.slice(1);
     if (firstResearch.value.length >= 3) {
       // Si 1er tableau filtré inexistant filtré le tableau de base
       if (results.length === 0) {
         results = recipes.filter(function (e) {
           if (
             e.name.includes(firstResearch.value) ||
-            e.appliance.includes(firstResearch.value)
+            e.name.includes(firstMinCharacter) ||
+            e.name.includes(firstMajCharacter) ||
+            e.appliance.includes(firstResearch.value) ||
+            e.appliance.includes(firstMinCharacter) ||
+            e.appliance.includes(firstMajCharacter)
           ) {
             return e;
           }
           for (let j = 0; j < e.ingredients.length; j++) {
-            if (e.ingredients[j].ingredient.includes(firstResearch.value)) {
+            if (
+              e.ingredients[j].ingredient.includes(firstResearch.value) ||
+              e.ingredients[j].ingredient.includes(firstMinCharacter) ||
+              e.ingredients[j].ingredient.includes(firstMajCharacter)
+            ) {
               return e;
             }
             for (let k = 0; k < e.ustensils.length; k++) {
               /* Si la condition est remplit une première fois l'élément est retourné contrairement à la première version 
               où on obtient un tableau avec des doublons qu'il faut traiter par la suite */
-              if (e.ustensils[k].includes(firstResearch.value)) {
+              if (
+                e.ustensils[k].includes(firstResearch.value) ||
+                e.ustensils[k].includes(firstMinCharacter) ||
+                e.ustensils[k].includes(firstMajCharacter)
+              ) {
                 return e;
               }
             }
@@ -205,18 +223,30 @@ async function renderRecipes() {
         results = results.filter(function (e) {
           if (
             e.name.includes(firstResearch.value) ||
-            e.appliance.includes(firstResearch.value)
+            e.name.includes(firstMinCharacter) ||
+            e.name.includes(firstMajCharacter) ||
+            e.appliance.includes(firstResearch.value) ||
+            e.appliance.includes(firstMinCharacter) ||
+            e.appliance.includes(firstMajCharacter)
           ) {
             return e;
           }
           for (let j = 0; j < e.ingredients.length; j++) {
-            if (e.ingredients[j].ingredient.includes(firstResearch.value)) {
+            if (
+              e.ingredients[j].ingredient.includes(firstResearch.value) ||
+              e.ingredients[j].ingredient.includes(firstMinCharacter) ||
+              e.ingredients[j].ingredient.includes(firstMajCharacter)
+            ) {
               return e;
             }
             for (let k = 0; k < e.ustensils.length; k++) {
               /* Si la condition est remplit une première fois l'élément est retourné contrairement à la première version 
               où on obtient un tableau avec des doublons qu'il faut traiter par la suite */
-              if (e.ustensils[k].includes(firstResearch.value)) {
+              if (
+                e.ustensils[k].includes(firstResearch.value) ||
+                e.ustensils[k].includes(firstMinCharacter) ||
+                e.ustensils[k].includes(firstMajCharacter)
+              ) {
                 return e;
               }
             }
@@ -239,13 +269,14 @@ async function renderRecipes() {
     optionsIngredients.classList.add("visible");
   });
 
-  listIngredients.addEventListener("input", function () {
-    for (let i = 0; i < ingredients.length; i++) {
-      if (listIngredients.value.includes(ingredients[i])) {
-        ingredients = [];
-        ingredients.push(ingredients[i]);
-      }
-    }
+  listUstensils.addEventListener("click", function () {
+    optionsUstensils.classList.remove("hidden");
+    optionsUstensils.classList.add("visible");
+  });
+
+  listAppliances.addEventListener("click", function () {
+    optionsAppliances.classList.remove("hidden");
+    optionsAppliances.classList.add("visible");
   });
 
   optionsIngredients.addEventListener("mouseleave", function () {
@@ -253,15 +284,15 @@ async function renderRecipes() {
     optionsIngredients.classList.add("hidden");
   });
 
-  let items = document.querySelectorAll("ul#ingredients > li");
-  console.log(items);
-  for (let i = 0; i < items.length; i++) {
-    items[i].addEventListener("click", function () {
-      listIngredients.value = items[i].innerText;
-      optionsIngredients.classList.remove("visible");
-      optionsIngredients.classList.add("hidden");
-    });
-  }
+  optionsUstensils.addEventListener("mouseleave", function () {
+    optionsUstensils.classList.remove("visible");
+    optionsUstensils.classList.add("hidden");
+  });
+
+  optionsAppliances.addEventListener("mouseleave", function () {
+    optionsAppliances.classList.remove("visible");
+    optionsAppliances.classList.add("hidden");
+  });
 
   listIngredients.addEventListener("change", function () {
     if (results.length === 0) {
