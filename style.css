@@ -1,5 +1,7 @@
 .height{
   height: 100%;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }
 
 .blue{
@@ -14,6 +16,27 @@
 
 .red{
   background-color: #ED6454;
+  color: white;
+}
+
+.blue, .green, .red{
+  border: none;
+  border-radius: 5px;
+  width: 200px;
+  padding: 10px;
+  margin-right: 17px;
+}
+
+.grey{
+  background-color: #E9ECF0;
+  border-right-color: #E9ECF0;
+}
+
+.margin{
+  margin-bottom: 5%;
+}
+
+::placeholder{
   color: white;
 }
 
@@ -37,4 +60,41 @@
 
 li{
   list-style-type: none;
+}
+
+.visible{
+  display: block;
+}
+
+.hidden {
+  display: none;
+}
+
+#ingredients{
+  background-color: #3282f7;
+}
+
+#appareils{
+  background-color: #68D9A4;
+}
+
+#ustensiles{
+  background-color: #ED6454;
+}
+ul#ingredients{
+  width: 40%;
+}
+
+ul#appareils,ul#ustensiles{
+width: 30%;
+}
+
+ul#ingredients,ul#appareils,ul#ustensiles{
+  position: absolute;
+  color: white;
+  column-count: 3;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  padding: 10px 0 10px 8px;
 }
