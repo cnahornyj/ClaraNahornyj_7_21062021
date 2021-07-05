@@ -36,6 +36,16 @@ function createTag(typeOfTag, list, color) {
   word.setAttribute("class", color);
 }
 
+function revealList(options) {
+  options.classList.remove("hidden");
+  options.classList.add("visible");
+}
+
+function hideList(options) {
+  options.classList.remove("visible");
+  options.classList.add("hidden");
+}
+
 async function renderRecipes() {
   let recipes = await getData();
   let recettes = recipes;
@@ -182,7 +192,7 @@ async function renderRecipes() {
 
     results = [...new Set(results)];
     console.log(results);
-      /*Lorsque le tri est effectué il faut vider les listes déroulantes 
+    /*Lorsque le tri est effectué il faut vider les listes déroulantes 
     et les mettre à jour avec les ingrédients, ustensiles, appareils des recettes restantes */
     optionsIngredients.innerHTML = "";
     optionsUstensils.innerHTML = "";
@@ -192,6 +202,16 @@ async function renderRecipes() {
     ustensiles = [];
     updateTheDropDownLists(results);
     createView(results);
+  }
+
+  function resetView(){
+    listRecipes.innerHTML = "";
+    optionsIngredients.innerHTML = "";
+    optionsUstensils.innerHTML = "";
+    optionsAppliances.innerHTML = "";
+    ingredients = [];
+    appareils = [];
+    ustensiles = [];
   }
 
   firstResearch.addEventListener("input", function () {
@@ -207,33 +227,27 @@ async function renderRecipes() {
   });
 
   listIngredients.addEventListener("click", function () {
-    optionsIngredients.classList.remove("hidden");
-    optionsIngredients.classList.add("visible");
+    revealList(optionsIngredients);
   });
 
   listUstensils.addEventListener("click", function () {
-    optionsUstensils.classList.remove("hidden");
-    optionsUstensils.classList.add("visible");
+    revealList(optionsUstensils);
   });
 
   listAppliances.addEventListener("click", function () {
-    optionsAppliances.classList.remove("hidden");
-    optionsAppliances.classList.add("visible");
+    revealList(optionsAppliances);
   });
 
   optionsIngredients.addEventListener("mouseleave", function () {
-    optionsIngredients.classList.remove("visible");
-    optionsIngredients.classList.add("hidden");
+    hideList(optionsIngredients);
   });
 
   optionsUstensils.addEventListener("mouseleave", function () {
-    optionsUstensils.classList.remove("visible");
-    optionsUstensils.classList.add("hidden");
+    hideList(optionsUstensils);
   });
 
   optionsAppliances.addEventListener("mouseleave", function () {
-    optionsAppliances.classList.remove("visible");
-    optionsAppliances.classList.add("hidden");
+    hideList(optionsAppliances);
   });
 
   listIngredients.addEventListener("change", function () {
@@ -249,8 +263,7 @@ async function renderRecipes() {
           }
         }
       }
-      optionsIngredients.classList.remove("visible");
-      optionsIngredients.classList.add("hidden");
+      hideList(optionsIngredients);
       createTag(ingredientags, listIngredients, "blue");
       updateTheDropDownLists(results);
       createView(results);
@@ -267,15 +280,8 @@ async function renderRecipes() {
       results = [...new Set(results1)];
       results1 = [];
       console.log(results);
-      optionsIngredients.classList.remove("visible");
-      optionsIngredients.classList.add("hidden");
-      listRecipes.innerHTML = "";
-      optionsIngredients.innerHTML = "";
-      optionsUstensils.innerHTML = "";
-      optionsAppliances.innerHTML = "";
-      ingredients = [];
-      appareils = [];
-      ustensiles = [];
+      hideList(optionsIngredients);
+      resetView();
       createTag(ingredientags, listIngredients, "blue");
       updateTheDropDownLists(results);
       createView(results);
@@ -289,6 +295,7 @@ async function renderRecipes() {
           results.push(recettes[i]);
         }
       }
+      hideList(optionsAppliances);
       createTag(appliancestags, listAppliances, "green");
       updateTheDropDownLists(results);
       createView(results);
@@ -301,15 +308,8 @@ async function renderRecipes() {
       results = [...new Set(results1)];
       results1 = [];
       console.log(results);
-      optionsIngredients.classList.remove("visible");
-      optionsIngredients.classList.add("hidden");
-      listRecipes.innerHTML = "";
-      optionsIngredients.innerHTML = "";
-      optionsUstensils.innerHTML = "";
-      optionsAppliances.innerHTML = "";
-      ingredients = [];
-      appareils = [];
-      ustensiles = [];
+      hideList(optionsAppliances);
+      resetView();
       createTag(appliancestags, listAppliances, "green");
       updateTheDropDownLists(results);
       createView(results);
@@ -325,14 +325,13 @@ async function renderRecipes() {
           }
         }
       }
-      optionsIngredients.classList.remove("visible");
-      optionsIngredients.classList.add("hidden");
+      hideList(optionsUstensils);
       createTag(ingredientags, listIngredients, "red");
       updateTheDropDownLists(results);
       createView(results);
     } else {
       for (let i = 0; i < results.length; i++) {
-        for (let k = 0; k < results.ustensils.length; k++) {
+        for (let k = 0; k < results[i].ustensils.length; k++) {
           if (results[i].ustensils[k].includes(listUstensils.value)) {
             results1.push(results[i]);
           }
@@ -341,15 +340,8 @@ async function renderRecipes() {
       results = [...new Set(results1)];
       results1 = [];
       console.log(results);
-      optionsUstensils.classList.remove("visible");
-      optionsUstensils.classList.add("hidden");
-      listRecipes.innerHTML = "";
-      optionsIngredients.innerHTML = "";
-      optionsUstensils.innerHTML = "";
-      optionsAppliances.innerHTML = "";
-      ingredients = [];
-      appareils = [];
-      ustensiles = [];
+      hideList(optionsUstensils);
+      resetView();
       createTag(ustensilstags, listUstensils, "red");
       updateTheDropDownLists(results);
       createView(results);
