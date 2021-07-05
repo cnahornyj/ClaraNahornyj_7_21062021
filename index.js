@@ -52,7 +52,6 @@ async function renderRecipes() {
   let recipes = await getData();
   let recettes = recipes;
   let results = [];
-  let results1 = [];
   let ingredients = [];
   let appareils = [];
   let ustensiles = [];
@@ -264,7 +263,6 @@ async function renderRecipes() {
   });
 
   listIngredients.addEventListener("click", function () {
-    console.log(ingredients);
     revealList(optionsIngredients);
   });
 
