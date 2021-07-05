@@ -314,7 +314,6 @@ async function renderRecipes() {
       updateTheDropDownLists(results);
       createView(results);
     }
-    console.log(results);
   });
 
   listUstensils.addEventListener("change", function () {
