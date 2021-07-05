@@ -27,7 +27,7 @@ function createTag(typeOfTag, list, color) {
   typeOfTag.style.marginBottom = "2%";
   typeOfTag.style.marginRight = "2%";
   word.innerText = `${list.value}`;
-  word.setAttribute("class", color);
+  word.setAttribute("class", `${color} mb-1 p-2 rounded`);
 }
 
 function createEltsOfDropDownList(array, optionsElts) {
@@ -39,13 +39,13 @@ function createEltsOfDropDownList(array, optionsElts) {
 }
 
 function revealList(list) {
-  list.classList.remove("hidden");
+  list.classList.remove("invisible");
   list.classList.add("visible");
 }
 
 function hideList(list) {
   list.classList.remove("visible");
-  list.classList.add("hidden");
+  list.classList.add("invisible");
 }
 
 async function renderRecipes() {
@@ -83,7 +83,7 @@ async function renderRecipes() {
       for (let i = 0; i < recipe.ingredients.length; i++) {
         let ingredient = document.createElement("li");
         ingredients.appendChild(ingredient);
-        ingredients.setAttribute("class", "col-lg-5 ingredients");
+        ingredient.setAttribute("class", "fw-bold");
         if (
           Object.prototype.hasOwnProperty.call(
             recipe.ingredients[i],
@@ -113,9 +113,11 @@ async function renderRecipes() {
       card.setAttribute("class", "col-sm-12 col-md-6 col-lg-4");
       cardBody.setAttribute("class", "card-body background");
       row.setAttribute("class", "row");
-      name.setAttribute("class", "col-lg-9");
-      time.setAttribute("class", "col-lg-3");
+      name.setAttribute("class", "col-lg-8");
+      time.setAttribute("class", "col-lg-4");
       row1.setAttribute("class", "row");
+      ingredients.setAttribute("class", "col-lg-5 list-unstyled");
+      ingredients.style.fontSize = "80%";
       description.setAttribute("class", "col-lg-7 description");
     }
   }
@@ -265,11 +267,9 @@ async function renderRecipes() {
   listIngredients.addEventListener("click", function () {
     revealList(optionsIngredients);
   });
-
   listUstensils.addEventListener("click", function () {
     revealList(optionsUstensils);
   });
-
   listAppliances.addEventListener("click", function () {
     revealList(optionsAppliances);
   });
@@ -277,13 +277,11 @@ async function renderRecipes() {
   optionsIngredients.addEventListener("mouseleave", function () {
     hideList(optionsIngredients);
   });
-
-  optionsUstensils.addEventListener("mouseleave", function () {
-    hideList(optionsUstensils);
-  });
-
   optionsAppliances.addEventListener("mouseleave", function () {
     hideList(optionsAppliances);
+  });
+  optionsUstensils.addEventListener("mouseleave", function () {
+    hideList(optionsUstensils);
   });
 
   listIngredients.addEventListener("change", function () {
@@ -296,7 +294,7 @@ async function renderRecipes() {
         }
       });
       hideList(optionsIngredients);
-      createTag(ingredientags, listIngredients, "blue");
+      createTag(ingredientags, listIngredients, "blue-ing");
       updateDropDownLists(results);
       createView(results);
     } else {
@@ -308,12 +306,34 @@ async function renderRecipes() {
         }
       });
       hideList(optionsIngredients);
-      createTag(ingredientags, listIngredients, "blue");
+      createTag(ingredientags, listIngredients, "blue-ing");
       updateDropDownLists(results);
       createView(results);
     }
   });
-
+  listAppliances.addEventListener("change", function () {
+    if (results.length === 0) {
+      results = recettes.filter(function (e) {
+        if (e.appliance.includes(listAppliances.value)) {
+          return e;
+        }
+      });
+      hideList(optionsAppliances);
+      createTag(appliancestags, listAppliances, "green-app");
+      updateDropDownLists(results);
+      createView(results);
+    } else {
+      results = results.filter(function (e) {
+        if (e.appliance.includes(listAppliances.value)) {
+          return e;
+        }
+      });
+      hideList(optionsAppliances);
+      createTag(appliancestags, listAppliances, "green-app");
+      updateDropDownLists(results);
+      createView(results);
+    }
+  });
   listUstensils.addEventListener("change", function () {
     if (results.length === 0) {
       results = recettes.filter(function (e) {
@@ -324,7 +344,7 @@ async function renderRecipes() {
         }
       });
       hideList(optionsUstensils);
-      createTag(ustensilstags, listUstensils, "red");
+      createTag(ustensilstags, listUstensils, "red-ust");
       updateDropDownLists(results);
       createView(results);
     } else {
@@ -336,31 +356,7 @@ async function renderRecipes() {
         }
       });
       hideList(optionsUstensils);
-      createTag(ustensilstags, listUstensils, "red");
-      updateDropDownLists(results);
-      createView(results);
-    }
-  });
-
-  listAppliances.addEventListener("change", function () {
-    if (results.length === 0) {
-      results = recettes.filter(function (e) {
-        if (e.appliance.includes(listAppliances.value)) {
-          return e;
-        }
-      });
-      hideList(optionsAppliances);
-      createTag(appliancestags, listAppliances, "green");
-      updateDropDownLists(results);
-      createView(results);
-    } else {
-      results = results.filter(function (e) {
-        if (e.appliance.includes(listAppliances.value)) {
-          return e;
-        }
-      });
-      hideList(optionsAppliances);
-      createTag(appliancestags, listAppliances, "green");
+      createTag(ustensilstags, listUstensils, "red-ust");
       updateDropDownLists(results);
       createView(results);
     }
