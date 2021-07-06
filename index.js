@@ -9,17 +9,23 @@ async function getData() {
 }
 
 let firstResearch = document.getElementById("first-research");
+
 let listIngredients = document.querySelector("input[list=ingredients]");
 let optionsIngredients = document.querySelector("#ingredients");
 let listUstensils = document.querySelector("input[list=ustensiles]");
 let optionsUstensils = document.querySelector("#ustensiles");
 let listAppliances = document.querySelector("input[list=appareils]");
 let optionsAppliances = document.querySelector("#appareils");
-let listOfTags = document.getElementById("tags");
-let ingredientags = document.getElementById("ingredientags");
-let ustensilstags = document.getElementById("ustensilstags");
-let appliancestags = document.getElementById("appliancestags");
+
 let listRecipes = document.querySelector("#recipes");
+
+function createEltsOfDropDownList(array, optionsElts) {
+  for (let i = 0; i < array.length; i++) {
+    let item = document.createElement("li");
+    item.innerText = `${array[i]}`;
+    optionsElts.appendChild(item);
+  }
+}
 
 function createTag(typeOfTag, list, color) {
   let word = document.createElement("span");
@@ -30,37 +36,65 @@ function createTag(typeOfTag, list, color) {
   word.setAttribute("class", `${color} mb-1 p-2 rounded`);
 }
 
-function createEltsOfDropDownList(array, optionsElts) {
-  for (let i = 0; i < array.length; i++) {
-    let item = document.createElement("li");
-    item.innerText = `${array[i]}`;
-    optionsElts.appendChild(item);
-  }
+function revealList(options) {
+  options.classList.remove("invisible");
+  options.classList.add("visible");
 }
 
-function revealList(list) {
-  list.classList.remove("invisible");
-  list.classList.add("visible");
-}
-
-function hideList(list) {
-  list.classList.remove("visible");
-  list.classList.add("invisible");
+function hideList(options) {
+  options.classList.remove("visible");
+  options.classList.add("invisible");
 }
 
 async function renderRecipes() {
   let recipes = await getData();
   let recettes = recipes;
   let results = [];
+  let results1 = [];
   let ingredients = [];
   let appareils = [];
   let ustensiles = [];
 
-  // Créer la vue pour la liste de recettes
-  function createView(recipes) {
-    listRecipes.innerHTML = "";
+  function updateTheDropDownLists(object) {
+    /* Mettre dans un tableau initialement vide 
+    chaque ingrédient de chaque recette */
+    for (let i = 0; i < object.length; i++) {
+      for (let j = 0; j < object[i].ingredients.length; j++) {
+        let food = object[i].ingredients[j].ingredient;
+        ingredients.push(food);
+      }
+    }
+    /* Initialiser un ensemble Set avec le tableau de strings au constructeur 
+    pour supprimer les ingrédients en doublons */
+    ingredients = [...new Set(ingredients)];
+
+    for (let i = 0; i < object.length; i++) {
+      for (let j = 0; j < object[i].ustensils.length; j++) {
+        let kitchen = object[i].ustensils[j];
+        ustensiles.push(kitchen);
+      }
+    }
+    ustensiles = [...new Set(ustensiles)];
+
+    for (let i = 0; i < object.length; i++) {
+      let outil = object[i].appliance;
+      appareils.push(outil);
+    }
+    appareils = [...new Set(appareils)];
+
+    // Ajouter les li aux différentes listes ul
+    createEltsOfDropDownList(ingredients, optionsIngredients);
+    createEltsOfDropDownList(ustensiles, optionsUstensils);
+    createEltsOfDropDownList(appareils, optionsAppliances);
+  }
+
+  /* Les liste déroulantes doivent être initialisés avec tous les éléments
+  de toutes les recettes ;*/
+  updateTheDropDownLists(recettes);
+
+  function createView(objects) {
     // Pour chaque recette création des éléments DOM
-    for (const recipe of recipes) {
+    for (const object of objects) {
       let card = document.createElement("div");
       let image = document.createElement("img");
       let cardBody = document.createElement("div");
@@ -80,38 +114,40 @@ async function renderRecipes() {
       cardBody.appendChild(row1);
       row1.appendChild(ingredients);
 
-      for (let i = 0; i < recipe.ingredients.length; i++) {
+      for (let i = 0; i < object.ingredients.length; i++) {
         let ingredient = document.createElement("li");
         ingredients.appendChild(ingredient);
         ingredient.setAttribute("class", "fw-bold");
         if (
           Object.prototype.hasOwnProperty.call(
-            recipe.ingredients[i],
+            object.ingredients[i],
             "quantity"
           ) &&
-          Object.prototype.hasOwnProperty.call(recipe.ingredients[i], "unit")
+          Object.prototype.hasOwnProperty.call(object.ingredients[i], "unit")
         ) {
-          ingredient.innerText = `${recipe.ingredients[i].ingredient} : ${recipe.ingredients[i].quantity} ${recipe.ingredients[i].unit}`;
+          ingredient.innerText = `${object.ingredients[i].ingredient} : ${object.ingredients[i].quantity} ${object.ingredients[i].unit}`;
         } else if (
           Object.prototype.hasOwnProperty.call(
-            recipe.ingredients[i],
+            object.ingredients[i],
             "quantity"
           )
         ) {
-          ingredient.innerText = `${recipe.ingredients[i].ingredient} : ${recipe.ingredients[i].quantity}`;
+          ingredient.innerText = `${object.ingredients[i].ingredient} : ${object.ingredients[i].quantity}`;
         } else {
-          ingredient.innerText = `${recipe.ingredients[i].ingredient}`;
+          ingredient.innerText = `${object.ingredients[i].ingredient}`;
         }
       }
       row1.appendChild(description);
 
       image.setAttribute("class", "card-img-top");
       image.setAttribute("src", "fond-gris.png");
-      name.textContent = `${recipe.name}`;
-      time.innerHTML = `<i class="fa fa-clock-o" aria-hidden="true"></i> ${recipe.time} min`;
-      description.textContent = `${recipe.description}`;
+      name.textContent = `${object.name}`;
+      time.innerHTML = `<i class="fa fa-clock-o" aria-hidden="true"></i> ${object.time} min`;
+      description.textContent = `${object.description}`;
       card.setAttribute("class", "col-sm-12 col-md-6 col-lg-4");
       cardBody.setAttribute("class", "card-body background");
+      cardBody.style.backgroundColor = "#e7e7e7";
+      cardBody.style.borderRadius = "0 0 5px 5px";
       row.setAttribute("class", "row");
       name.setAttribute("class", "col-lg-8");
       time.setAttribute("class", "col-lg-4");
@@ -122,145 +158,70 @@ async function renderRecipes() {
     }
   }
 
-  // Mettre à jour les listes déroulantes selon les recettes
-  function updateDropDownLists(recipes) {
-    ingredients = [];
-    appareils = [];
-    ustensiles = [];
+  function resetView(){
+    listRecipes.innerHTML = "";
     optionsIngredients.innerHTML = "";
     optionsUstensils.innerHTML = "";
     optionsAppliances.innerHTML = "";
-
-    // Pour chaque ingrédient dans chaque recette --> ingredients[]
-    for (let i = 0; i < recipes.length; i++) {
-      for (let j = 0; j < recipes[i].ingredients.length; j++) {
-        let food = recipes[i].ingredients[j].ingredient;
-        ingredients.push(food);
-      }
-    }
-    // Supprimer les doublons (deux recettes peuvent avoir des ingrédients similaires)
-    ingredients = [...new Set(ingredients)];
-    // Pour chaque ingrédient dans la liste ul des ingrédients création des li
-    createEltsOfDropDownList(ingredients, optionsIngredients);
-
-    // Pour chaque ustensile dans chaque recette --> ustensiles[]
-    for (let i = 0; i < recipes.length; i++) {
-      for (let j = 0; j < recipes[i].ustensils.length; j++) {
-        let kitchen = recipes[i].ustensils[j];
-        ustensiles.push(kitchen);
-      }
-    }
-    // Supprimer les doublons (deux recettes peuvent avoir des ustensiles similaires)
-    ustensiles = [...new Set(ustensiles)];
-    // Pour chaque ingrédient dans la liste ul des ingrédients création des li
-    createEltsOfDropDownList(ustensiles, optionsUstensils);
-
-    // Pour chaque appareil dans chaque recette --> appareils[]
-    for (let i = 0; i < recipes.length; i++) {
-      let outil = recipes[i].appliance;
-      appareils.push(outil);
-    }
-    // Supprimer les doublons (deux recettes peuvent avoir des appareils similaires)
-    appareils = [...new Set(appareils)];
-    // Pour chaque ingrédient dans la liste ul des ingrédients création des li
-    createEltsOfDropDownList(appareils, optionsAppliances);
+    ingredients = [];
+    appareils = [];
+    ustensiles = [];
   }
 
-  updateDropDownLists(recettes);
+  function applyFilter(value) {
+    // Gérer la sensibilité à la casse
+    let firstMinCharacter = value[0].toUpperCase() + value.slice(1);
+    let firstMajCharacter = value[0].toLowerCase() + value.slice(1);
+
+    for (let i = 0; i < recettes.length; i++) {
+      if (
+        recettes[i].name.includes(value) ||
+        recettes[i].name.includes(firstMinCharacter) ||
+        recettes[i].name.includes(firstMajCharacter) ||
+        recettes[i].appliance.includes(value) ||
+        recettes[i].appliance.includes(firstMinCharacter) ||
+        recettes[i].appliance.includes(firstMajCharacter)
+      ) {
+        results.push(recettes[i]);
+      }
+      for (let j = 0; j < recettes[i].ingredients.length; j++) {
+        if (
+          recettes[i].ingredients[j].ingredient.includes(value) ||
+          recettes[i].ingredients[j].ingredient.includes(firstMinCharacter) ||
+          recettes[i].ingredients[j].ingredient.includes(firstMajCharacter)
+        ) {
+          results.push(recettes[i]);
+        }
+        for (let k = 0; k < recettes[i].ustensils.length; k++) {
+          if (
+            recettes[i].ustensils[k].includes(value) ||
+            recettes[i].ustensils[k].includes(firstMinCharacter) ||
+            recettes[i].ustensils[k].includes(firstMajCharacter)
+          ) {
+            results.push(recettes[i]);
+          }
+        }
+      }
+    }
+
+    results = [...new Set(results)];
+    console.log(results);
+    /*Lorsque le tri est effectué il faut vider les listes déroulantes 
+    et les mettre à jour avec les ingrédients, ustensiles, appareils des recettes restantes */
+    resetView();
+    updateTheDropDownLists(results);
+    createView(results);
+  }
 
   firstResearch.addEventListener("input", function () {
-    // Sensibilité à la casse
-    let firstMinCharacter =
-      firstResearch.value[0].toUpperCase() + firstResearch.value.slice(1);
-    let firstMajCharacter =
-      firstResearch.value[0].toLowerCase() + firstResearch.value.slice(1);
-
-    // Si la valeur de l'input est égale ou supérieure à 3 caractères REINITIALISATION
+    // Exécution de la fonction à chaque saisie de caractère
     if (firstResearch.value.length >= 3) {
-      // Si 1er tableau filtré inexistant filtré le tableau de base
-      if (results.length === 0) {
-        results = recipes.filter(function (e) {
-          /* Si la condition est remplie une première fois l'élément est retourné contrairement à la première version 
-          où on obtient un tableau avec des doublons qu'il faut traiter par la suite */
-          if (
-            e.name.includes(firstResearch.value) ||
-            e.name.includes(firstMinCharacter) ||
-            e.name.includes(firstMajCharacter) ||
-            e.appliance.includes(firstResearch.value) ||
-            e.appliance.includes(firstMinCharacter) ||
-            e.appliance.includes(firstMajCharacter)
-          ) {
-            return e;
-          }
-          for (let j = 0; j < e.ingredients.length; j++) {
-            if (
-              e.ingredients[j].ingredient.includes(firstResearch.value) ||
-              e.ingredients[j].ingredient.includes(firstMinCharacter) ||
-              e.ingredients[j].ingredient.includes(firstMajCharacter)
-            ) {
-              return e;
-            }
-            for (let k = 0; k < e.ustensils.length; k++) {
-              if (
-                e.ustensils[k].includes(firstResearch.value) ||
-                e.ustensils[k].includes(firstMinCharacter) ||
-                e.ustensils[k].includes(firstMajCharacter)
-              ) {
-                return e;
-              }
-            }
-          }
-        });
-        console.log(results);
-        // Mettre à jour les listes déroulantes avec les éléments des recettes restantes
-        updateDropDownLists(results);
-        // Mettre à jour la vue avec les recettes restantes
-        createView(results);
-      } else {
-        // Sinon si le tableau filtré existant filtré celui ci
-        results = results.filter(function (e) {
-          if (
-            e.name.includes(firstResearch.value) ||
-            e.name.includes(firstMinCharacter) ||
-            e.name.includes(firstMajCharacter) ||
-            e.appliance.includes(firstResearch.value) ||
-            e.appliance.includes(firstMinCharacter) ||
-            e.appliance.includes(firstMajCharacter)
-          ) {
-            return e;
-          }
-          for (let j = 0; j < e.ingredients.length; j++) {
-            if (
-              e.ingredients[j].ingredient.includes(firstResearch.value) ||
-              e.ingredients[j].ingredient.includes(firstMinCharacter) ||
-              e.ingredients[j].ingredient.includes(firstMajCharacter)
-            ) {
-              return e;
-            }
-            for (let k = 0; k < e.ustensils.length; k++) {
-              /* Si la condition est remplit une première fois l'élément est retourné contrairement à la première version 
-              où on obtient un tableau avec des doublons qu'il faut traiter par la suite */
-              if (
-                e.ustensils[k].includes(firstResearch.value) ||
-                e.ustensils[k].includes(firstMinCharacter) ||
-                e.ustensils[k].includes(firstMajCharacter)
-              ) {
-                return e;
-              }
-            }
-          }
-        });
-        console.log(results);
-        // Mettre à jour les listes déroulantes avec les éléments des recettes restantes
-        updateDropDownLists(results);
-        // Mettre à jour la vue avec les recettes restantes
-        createView(results);
-      }
-      // Sinon si la valeur de l'input est inférieure à 3 caractères TOUT réinitialiser
-    } else {
-      results = [];
-      updateDropDownLists(recipes);
       listRecipes.innerHTML = "";
+      results = [];
+      applyFilter(firstResearch.value);
+    } else {
+      listRecipes.innerHTML = "";
+      results = [];
     }
   });
 
@@ -277,87 +238,105 @@ async function renderRecipes() {
   optionsIngredients.addEventListener("mouseleave", function () {
     hideList(optionsIngredients);
   });
-  optionsAppliances.addEventListener("mouseleave", function () {
-    hideList(optionsAppliances);
-  });
   optionsUstensils.addEventListener("mouseleave", function () {
     hideList(optionsUstensils);
+  });
+  optionsAppliances.addEventListener("mouseleave", function () {
+    hideList(optionsAppliances);
   });
 
   listIngredients.addEventListener("change", function () {
     if (results.length === 0) {
-      results = recettes.filter(function (e) {
-        for (let j = 0; j < e.ingredients.length; j++) {
-          if (e.ingredients[j].ingredient.includes(listIngredients.value)) {
-            return e;
+      for (let i = 0; i < recettes.length; i++) {
+        for (let j = 0; j < recettes[i].ingredients.length; j++) {
+          if (
+            recettes[i].ingredients[j].ingredient.includes(
+              listIngredients.value
+            )
+          ) {
+            results.push(recettes[i]);
           }
         }
-      });
+      }
       hideList(optionsIngredients);
       createTag(ingredientags, listIngredients, "blue-ing");
-      updateDropDownLists(results);
+      updateTheDropDownLists(results);
       createView(results);
     } else {
-      results = results.filter(function (e) {
-        for (let j = 0; j < e.ingredients.length; j++) {
-          if (e.ingredients[j].ingredient.includes(listIngredients.value)) {
-            return e;
+      for (let i = 0; i < results.length; i++) {
+        for (let j = 0; j < results[i].ingredients.length; j++) {
+          if (
+            results[i].ingredients[j].ingredient.includes(listIngredients.value)
+          ) {
+            results1.push(results[i]);
           }
         }
-      });
+      }
+      results = [...new Set(results1)];
+      results1 = [];
+      console.log(results);
       hideList(optionsIngredients);
+      resetView();
       createTag(ingredientags, listIngredients, "blue-ing");
-      updateDropDownLists(results);
+      updateTheDropDownLists(results);
       createView(results);
     }
   });
   listAppliances.addEventListener("change", function () {
     if (results.length === 0) {
-      results = recettes.filter(function (e) {
-        if (e.appliance.includes(listAppliances.value)) {
-          return e;
+      for (let i = 0; i < results.length; i++) {
+        if (results[i].appliance.includes(listAppliances.value)) {
+          results.push(recettes[i]);
         }
-      });
+      }
       hideList(optionsAppliances);
       createTag(appliancestags, listAppliances, "green-app");
-      updateDropDownLists(results);
+      updateTheDropDownLists(results);
       createView(results);
     } else {
-      results = results.filter(function (e) {
-        if (e.appliance.includes(listAppliances.value)) {
-          return e;
+      for (let i = 0; i < results.length; i++) {
+        if (results[i].appliance.includes(listAppliances.value)) {
+          results1.push(results[i]);
         }
-      });
+      }
+      results = [...new Set(results1)];
+      results1 = [];
+      console.log(results);
       hideList(optionsAppliances);
+      resetView();
       createTag(appliancestags, listAppliances, "green-app");
-      updateDropDownLists(results);
+      updateTheDropDownLists(results);
       createView(results);
     }
   });
   listUstensils.addEventListener("change", function () {
     if (results.length === 0) {
-      results = recettes.filter(function (e) {
-        for (let k = 0; k < e.ustensils.length; k++) {
-          if (e.ustensils[k].includes(listUstensils.value)) {
-            return e;
+      for (let i = 0; i < recettes.length; i++) {
+        for (let k = 0; k < recettes[i].ustensils.length; k++) {
+          if (recettes[i].ustensils[k].includes(listUstensils.value)) {
+            results.push(recettes[i]);
           }
         }
-      });
+      }
       hideList(optionsUstensils);
-      createTag(ustensilstags, listUstensils, "red-ust");
-      updateDropDownLists(results);
+      createTag(ingredientags, listIngredients, "red-ust");
+      updateTheDropDownLists(results);
       createView(results);
     } else {
-      results = results.filter(function (e) {
-        for (let k = 0; k < e.ustensils.length; k++) {
-          if (e.ustensils[k].includes(listUstensils.value)) {
-            return e;
+      for (let i = 0; i < results.length; i++) {
+        for (let k = 0; k < results[i].ustensils.length; k++) {
+          if (results[i].ustensils[k].includes(listUstensils.value)) {
+            results1.push(results[i]);
           }
         }
-      });
+      }
+      results = [...new Set(results1)];
+      results1 = [];
+      console.log(results);
       hideList(optionsUstensils);
+      resetView();
       createTag(ustensilstags, listUstensils, "red-ust");
-      updateDropDownLists(results);
+      updateTheDropDownLists(results);
       createView(results);
     }
   });
