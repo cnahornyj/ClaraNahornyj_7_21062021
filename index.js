@@ -156,7 +156,8 @@ async function renderRecipes() {
       row1.setAttribute("class", "row");
       ingredients.setAttribute("class", "col-lg-4 list-unstyled");
       ingredients.style.fontSize = "85%";
-      description.setAttribute("class", "col-lg-8 description");
+      description.style.fontSize = "85%";
+      description.setAttribute("class", "col-lg-8");
     }
   }
 
@@ -180,9 +181,9 @@ async function renderRecipes() {
         recettes[i].name.includes(value) ||
         recettes[i].name.includes(firstMinCharacter) ||
         recettes[i].name.includes(firstMajCharacter) ||
-        recettes[i].appliance.includes(value) ||
-        recettes[i].appliance.includes(firstMinCharacter) ||
-        recettes[i].appliance.includes(firstMajCharacter)
+        recettes[i].description.includes(value) ||
+        recettes[i].description.includes(firstMinCharacter) ||
+        recettes[i].description.includes(firstMajCharacter)
       ) {
         results.push(recettes[i]);
       }
@@ -193,15 +194,6 @@ async function renderRecipes() {
           recettes[i].ingredients[j].ingredient.includes(firstMajCharacter)
         ) {
           results.push(recettes[i]);
-        }
-        for (let k = 0; k < recettes[i].ustensils.length; k++) {
-          if (
-            recettes[i].ustensils[k].includes(value) ||
-            recettes[i].ustensils[k].includes(firstMinCharacter) ||
-            recettes[i].ustensils[k].includes(firstMajCharacter)
-          ) {
-            results.push(recettes[i]);
-          }
         }
       }
     }
