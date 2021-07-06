@@ -29,8 +29,8 @@
   color: white;
 }
 
-.description, .ingredients{
-  font-size: 80%;
+.text-align-right{
+  text-align: right;
 }
 
 ul#ingredients,ul#appareils,ul#ustensiles{
