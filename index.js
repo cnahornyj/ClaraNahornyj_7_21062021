@@ -117,7 +117,7 @@ async function renderRecipes() {
       for (let i = 0; i < object.ingredients.length; i++) {
         let ingredient = document.createElement("li");
         ingredients.appendChild(ingredient);
-        ingredients.setAttribute("class", "fw-bold");
+        ingredient.setAttribute("class", "fw-bold");
         if (
           Object.prototype.hasOwnProperty.call(
             object.ingredients[i],
@@ -145,7 +145,9 @@ async function renderRecipes() {
       time.innerHTML = `<i class="fa fa-clock-o" aria-hidden="true"></i> ${object.time} min`;
       description.textContent = `${object.description}`;
       card.setAttribute("class", "col-sm-12 col-md-6 col-lg-4");
-      cardBody.setAttribute("class", "card-body background");
+      cardBody.setAttribute("class", "card-body");
+      cardBody.style.backgroundColor = "#e7e7e7";
+      cardBody.style.borderRadius = "0 0 5px 5px";
       row.setAttribute("class", "row");
       name.setAttribute("class", "col-lg-8");
       time.setAttribute("class", "col-lg-4");

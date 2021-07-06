@@ -25,7 +25,7 @@
   border-right-color: #E9ECF0;
 }
 
-::placeholder, .blue-ing, .green-app, .red-ust{
+::placeholder, .blue-ing, .green-app, .red-ust, ul#ingredients,ul#appareils,ul#ustensiles{
   color: white;
 }
 
@@ -33,13 +33,7 @@
   font-size: 80%;
 }
 
-.background{
-  background-color: #e7e7e7;
-  border-radius: 0 0 5px 5px;
-}
-
 ul#ingredients,ul#appareils,ul#ustensiles{
-  color: white;
   column-count: 3;
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
