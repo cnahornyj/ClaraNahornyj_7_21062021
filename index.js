@@ -33,7 +33,7 @@ function createTag(typeOfTag, list, color) {
   typeOfTag.style.marginBottom = "2%";
   typeOfTag.style.marginRight = "2%";
   word.innerText = `${list.value}`;
-  word.setAttribute("class", color);
+  word.setAttribute("class", `${color} mb-1 p-2 rounded`);
 }
 
 function revealList(options) {
@@ -141,9 +141,9 @@ async function renderRecipes() {
 
       image.setAttribute("class", "card-img-top");
       image.setAttribute("src", "fond-gris.png");
-      name.textContent = `${recipe.name}`;
-      time.innerHTML = `<i class="fa fa-clock-o" aria-hidden="true"></i> ${recipe.time} min`;
-      description.textContent = `${recipe.description}`;
+      name.textContent = `${object.name}`;
+      time.innerHTML = `<i class="fa fa-clock-o" aria-hidden="true"></i> ${object.time} min`;
+      description.textContent = `${object.description}`;
       card.setAttribute("class", "col-sm-12 col-md-6 col-lg-4");
       cardBody.setAttribute("class", "card-body background");
       row.setAttribute("class", "row");
@@ -261,7 +261,7 @@ async function renderRecipes() {
         }
       }
       hideList(optionsIngredients);
-      createTag(ingredientags, listIngredients, "blue");
+      createTag(ingredientags, listIngredients, "blue-ing");
       updateTheDropDownLists(results);
       createView(results);
     } else {
@@ -279,7 +279,7 @@ async function renderRecipes() {
       console.log(results);
       hideList(optionsIngredients);
       resetView();
-      createTag(ingredientags, listIngredients, "blue");
+      createTag(ingredientags, listIngredients, "blue-ing");
       updateTheDropDownLists(results);
       createView(results);
     }
@@ -293,7 +293,7 @@ async function renderRecipes() {
         }
       }
       hideList(optionsAppliances);
-      createTag(appliancestags, listAppliances, "green");
+      createTag(appliancestags, listAppliances, "green-app");
       updateTheDropDownLists(results);
       createView(results);
     } else {
@@ -307,7 +307,7 @@ async function renderRecipes() {
       console.log(results);
       hideList(optionsAppliances);
       resetView();
-      createTag(appliancestags, listAppliances, "green");
+      createTag(appliancestags, listAppliances, "green-app");
       updateTheDropDownLists(results);
       createView(results);
     }
@@ -323,7 +323,7 @@ async function renderRecipes() {
         }
       }
       hideList(optionsUstensils);
-      createTag(ingredientags, listIngredients, "red");
+      createTag(ingredientags, listIngredients, "red-ust");
       updateTheDropDownLists(results);
       createView(results);
     } else {
@@ -339,7 +339,7 @@ async function renderRecipes() {
       console.log(results);
       hideList(optionsUstensils);
       resetView();
-      createTag(ustensilstags, listUstensils, "red");
+      createTag(ustensilstags, listUstensils, "red-ust");
       updateTheDropDownLists(results);
       createView(results);
     }
