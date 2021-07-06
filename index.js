@@ -117,7 +117,7 @@ async function renderRecipes() {
       for (let i = 0; i < object.ingredients.length; i++) {
         let ingredient = document.createElement("li");
         ingredients.appendChild(ingredient);
-        ingredients.setAttribute("class", "col-lg-5 ingredients");
+        ingredients.setAttribute("class", "fw-bold");
         if (
           Object.prototype.hasOwnProperty.call(
             object.ingredients[i],
@@ -141,15 +141,17 @@ async function renderRecipes() {
 
       image.setAttribute("class", "card-img-top");
       image.setAttribute("src", "fond-gris.png");
-      name.textContent = `${object.name}`;
-      time.innerHTML = `<i class="fa fa-clock-o" aria-hidden="true"></i> ${object.time} min`;
-      description.textContent = `${object.description}`;
+      name.textContent = `${recipe.name}`;
+      time.innerHTML = `<i class="fa fa-clock-o" aria-hidden="true"></i> ${recipe.time} min`;
+      description.textContent = `${recipe.description}`;
       card.setAttribute("class", "col-sm-12 col-md-6 col-lg-4");
       cardBody.setAttribute("class", "card-body background");
       row.setAttribute("class", "row");
-      name.setAttribute("class", "col-lg-9");
-      time.setAttribute("class", "col-lg-3");
+      name.setAttribute("class", "col-lg-8");
+      time.setAttribute("class", "col-lg-4");
       row1.setAttribute("class", "row");
+      ingredients.setAttribute("class", "col-lg-5 list-unstyled");
+      ingredients.style.fontSize = "80%";
       description.setAttribute("class", "col-lg-7 description");
     }
   }
