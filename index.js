@@ -144,17 +144,20 @@ async function renderRecipes() {
       name.textContent = `${object.name}`;
       time.innerHTML = `<i class="fa fa-clock-o" aria-hidden="true"></i> ${object.time} min`;
       description.textContent = `${object.description}`;
-      card.setAttribute("class", "col-sm-12 col-md-6 col-lg-4");
+      card.setAttribute("class", "col-sm-12 col-md-6 col-lg-4 mb-2");
+      card.style.margin = "2% 0 2% 0";
       cardBody.setAttribute("class", "card-body");
       cardBody.style.backgroundColor = "#e7e7e7";
       cardBody.style.borderRadius = "0 0 5px 5px";
+      cardBody.style.height = "390px";
       row.setAttribute("class", "row");
       name.setAttribute("class", "col-lg-8");
-      time.setAttribute("class", "col-lg-4");
+      time.setAttribute("class", "col-lg-4 text-align-right");
       row1.setAttribute("class", "row");
-      ingredients.setAttribute("class", "col-lg-5 list-unstyled");
-      ingredients.style.fontSize = "80%";
-      description.setAttribute("class", "col-lg-7 description");
+      ingredients.setAttribute("class", "col-lg-4 list-unstyled");
+      ingredients.style.fontSize = "85%";
+      description.setAttribute("class", "col-lg-8 description");
+      description.style.fontSize = "80%";
     }
   }
 
