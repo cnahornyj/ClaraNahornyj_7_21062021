@@ -50,7 +50,6 @@ async function renderRecipes() {
   let recipes = await getData();
   let recettes = recipes;
   let results = [];
-  let results1 = [];
   let ingredients = [];
   let appareils = [];
   let ustensiles = [];
@@ -161,7 +160,7 @@ async function renderRecipes() {
     }
   }
 
-  function resetView(){
+  function resetView() {
     listRecipes.innerHTML = "";
     optionsIngredients.innerHTML = "";
     optionsUstensils.innerHTML = "";
@@ -176,29 +175,23 @@ async function renderRecipes() {
     let firstMinCharacter = value[0].toUpperCase() + value.slice(1);
     let firstMajCharacter = value[0].toLowerCase() + value.slice(1);
 
-    for (let i = 0; i < recettes.length; i++) {
-      if (
-        recettes[i].name.includes(value) ||
-        recettes[i].name.includes(firstMinCharacter) ||
-        recettes[i].name.includes(firstMajCharacter) ||
-        recettes[i].description.includes(value) ||
-        recettes[i].description.includes(firstMinCharacter) ||
-        recettes[i].description.includes(firstMajCharacter)
-      ) {
-        results.push(recettes[i]);
-      }
-      for (let j = 0; j < recettes[i].ingredients.length; j++) {
+    results = recipes.filter(function (e) {
+      for (let j = 0; j < e.ingredients.length; j++) {
         if (
-          recettes[i].ingredients[j].ingredient.includes(value) ||
-          recettes[i].ingredients[j].ingredient.includes(firstMinCharacter) ||
-          recettes[i].ingredients[j].ingredient.includes(firstMajCharacter)
+          e.name.includes(value) ||
+          e.name.includes(firstMinCharacter) ||
+          e.name.includes(firstMajCharacter) ||
+          e.description.includes(value) ||
+          e.description.includes(firstMinCharacter) ||
+          e.description.includes(firstMajCharacter) ||
+          e.ingredients[j].ingredient.includes(value) ||
+          e.ingredients[j].ingredient.includes(firstMinCharacter) ||
+          e.ingredients[j].ingredient.includes(firstMajCharacter)
         ) {
-          results.push(recettes[i]);
+          return e;
         }
       }
-    }
-
-    results = [...new Set(results)];
+    });
     console.log(results);
     /*Lorsque le tri est effectué il faut vider les listes déroulantes 
     et les mettre à jour avec les ingrédients, ustensiles, appareils des recettes restantes */
@@ -241,33 +234,26 @@ async function renderRecipes() {
 
   listIngredients.addEventListener("change", function () {
     if (results.length === 0) {
-      for (let i = 0; i < recettes.length; i++) {
-        for (let j = 0; j < recettes[i].ingredients.length; j++) {
-          if (
-            recettes[i].ingredients[j].ingredient.includes(
-              listIngredients.value
-            )
-          ) {
-            results.push(recettes[i]);
+      results = recipes.filter(function (e) {
+        for (let j = 0; j < e.ingredients.length; j++) {
+          if (e.ingredients[j].ingredient.includes(listIngredients.value)) {
+            return e;
           }
         }
-      }
+      });
+      console.log(results);
       hideList(optionsIngredients);
       createTag(ingredientags, listIngredients, "blue-ing");
       updateTheDropDownLists(results);
       createView(results);
     } else {
-      for (let i = 0; i < results.length; i++) {
-        for (let j = 0; j < results[i].ingredients.length; j++) {
-          if (
-            results[i].ingredients[j].ingredient.includes(listIngredients.value)
-          ) {
-            results1.push(results[i]);
+      results = results.filter(function (e) {
+        for (let j = 0; j < e.ingredients.length; j++) {
+          if (e.ingredients[j].ingredient.includes(listIngredients.value)) {
+            return e;
           }
         }
-      }
-      results = [...new Set(results1)];
-      results1 = [];
+      });
       console.log(results);
       hideList(optionsIngredients);
       resetView();
@@ -278,23 +264,21 @@ async function renderRecipes() {
   });
   listAppliances.addEventListener("change", function () {
     if (results.length === 0) {
-      for (let i = 0; i < results.length; i++) {
-        if (results[i].appliance.includes(listAppliances.value)) {
-          results.push(recettes[i]);
+      results = recipes.filter(function (e) {
+        if (e.appliance.includes(listAppliances.value)) {
+          return e;
         }
-      }
+      });
       hideList(optionsAppliances);
       createTag(appliancestags, listAppliances, "green-app");
       updateTheDropDownLists(results);
       createView(results);
     } else {
-      for (let i = 0; i < results.length; i++) {
-        if (results[i].appliance.includes(listAppliances.value)) {
-          results1.push(results[i]);
+      results = results.filter(function (e) {
+        if (e.appliance.includes(listAppliances.value)) {
+          return e;
         }
-      }
-      results = [...new Set(results1)];
-      results1 = [];
+      });
       console.log(results);
       hideList(optionsAppliances);
       resetView();
@@ -305,27 +289,26 @@ async function renderRecipes() {
   });
   listUstensils.addEventListener("change", function () {
     if (results.length === 0) {
-      for (let i = 0; i < recettes.length; i++) {
-        for (let k = 0; k < recettes[i].ustensils.length; k++) {
-          if (recettes[i].ustensils[k].includes(listUstensils.value)) {
-            results.push(recettes[i]);
+      results = recipes.filter(function (e) {
+        for (let k = 0; k < e.ustensils.length; k++) {
+          if (e.ustensils[k].includes(listUstensils.value)) {
+            return e;
           }
         }
-      }
+      });
+      console.log(results);
       hideList(optionsUstensils);
       createTag(ingredientags, listIngredients, "red-ust");
       updateTheDropDownLists(results);
       createView(results);
     } else {
-      for (let i = 0; i < results.length; i++) {
-        for (let k = 0; k < results[i].ustensils.length; k++) {
-          if (results[i].ustensils[k].includes(listUstensils.value)) {
-            results1.push(results[i]);
+      results = results.filter(function (e) {
+        for (let k = 0; k < e.ustensils.length; k++) {
+          if (e.ustensils[k].includes(listUstensils.value)) {
+            return e;
           }
         }
-      }
-      results = [...new Set(results1)];
-      results1 = [];
+      });
       console.log(results);
       hideList(optionsUstensils);
       resetView();
