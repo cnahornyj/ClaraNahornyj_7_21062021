@@ -10,12 +10,12 @@ async function getData() {
 
 let firstResearch = document.getElementById("first-research");
 
-let listIngredients = document.querySelector("input[list=ingredients]");
+let listIngredients = document.querySelector("#list-ingredients");
 let optionsIngredients = document.querySelector("#ingredients");
-let listUstensils = document.querySelector("input[list=ustensiles]");
-let optionsUstensils = document.querySelector("#ustensiles");
-let listAppliances = document.querySelector("input[list=appareils]");
+let listAppliances = document.querySelector("#list-appareils");
 let optionsAppliances = document.querySelector("#appareils");
+let listUstensils = document.querySelector("#list-ustensiles");
+let optionsUstensils = document.querySelector("#ustensiles");
 
 let listRecipes = document.querySelector("#recipes");
 
