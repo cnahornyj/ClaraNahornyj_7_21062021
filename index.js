@@ -222,11 +222,9 @@ async function renderRecipes() {
   listIngredients.addEventListener("click", function () {
     revealList(optionsIngredients);
   });
-
   listUstensils.addEventListener("click", function () {
     revealList(optionsUstensils);
   });
-
   listAppliances.addEventListener("click", function () {
     revealList(optionsAppliances);
   });
@@ -234,11 +232,9 @@ async function renderRecipes() {
   optionsIngredients.addEventListener("mouseleave", function () {
     hideList(optionsIngredients);
   });
-
   optionsUstensils.addEventListener("mouseleave", function () {
     hideList(optionsUstensils);
   });
-
   optionsAppliances.addEventListener("mouseleave", function () {
     hideList(optionsAppliances);
   });
@@ -280,7 +276,6 @@ async function renderRecipes() {
       createView(results);
     }
   });
-
   listAppliances.addEventListener("change", function () {
     if (results.length === 0) {
       for (let i = 0; i < results.length; i++) {
@@ -308,7 +303,6 @@ async function renderRecipes() {
       createView(results);
     }
   });
-
   listUstensils.addEventListener("change", function () {
     if (results.length === 0) {
       for (let i = 0; i < recettes.length; i++) {
