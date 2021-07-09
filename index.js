@@ -197,7 +197,7 @@ async function renderRecipes() {
         }
       }
     }
-
+    console.log(results);
     results = [...new Set(results)];
     console.log(results);
     /*Lorsque le tri est effectué il faut vider les listes déroulantes 
