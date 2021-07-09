@@ -147,7 +147,7 @@ async function renderRecipes() {
       cardBody.setAttribute("class", "card-body");
       cardBody.style.backgroundColor = "#e7e7e7";
       cardBody.style.borderRadius = "0 0 5px 5px";
-      cardBody.style.height = "390px";
+      cardBody.style.height = "450px";
       card.style.margin = "2% 0 2% 0";
       row.setAttribute("class", "row");
       name.setAttribute("class", "col-lg-8");
